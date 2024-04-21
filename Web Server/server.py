@@ -40,6 +40,19 @@ async def capture_screen(filename="capture.png"):
         return img
 
 
+@app.route("/data", methods=["GET"])
+async def get():
+    return (
+        jsonify(
+            {
+                "status": "success",
+                "message": "hi",
+            }
+        ),
+        200,
+    )
+
+
 @app.route("/data", methods=["POST"])
 async def receive_data():
     data = request.json
