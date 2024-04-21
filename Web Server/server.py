@@ -61,7 +61,13 @@ async def receive_data():
     response = await geminiImageCall("Describe in detail what you see?")
 
     return (
-        jsonify({"status": "success", "message": "We have received " + response}),
+        jsonify(
+            {
+                "status": "success",
+                "message": "We have received " + response["text_response"],
+                "image": response["image"],
+            }
+        ),
         200,
     )
 
@@ -126,7 +132,7 @@ async def geminiImageCall(prompt, imageName="capture.png"):
     # Generate content using the model
     response = model.generate_content(contents=contents)
     print(response.text)
-    return response.text
+    return {"text_response": response.text, "image": base64_image}
 
 
 if __name__ == "__main__":

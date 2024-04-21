@@ -91,6 +91,24 @@ public class ScreenshotHandler : MonoBehaviour
         Debug.Log("Speak: " + text);
     }
 
+    private Texture2D Base64ToTexture(string base64)
+    {
+        try
+        {
+            byte[] imageBytes = Convert.FromBase64String(base64);
+            Texture2D texture = new Texture2D(2, 2); // Create a new texture (size does not matter)
+            if (texture.LoadImage(imageBytes)) // Load the image
+            {
+                return texture; // If load succeeds, texture size will be replaced by the loaded image
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Error loading base64 image: " + ex.Message);
+        }
+        return null;
+    }
+
     IEnumerator PostData(string input)
     {
         string url = "http://127.0.0.1:5000/data";
@@ -125,6 +143,16 @@ public class ScreenshotHandler : MonoBehaviour
 
             // Additional log to show the extracted message
             Debug.Log("Extracted Message: " + message);
+
+            string base64EncodedImage = N["image"]; // Assuming the field you're looking for is named 'message'
+            if (!string.IsNullOrEmpty(base64EncodedImage))
+            {
+                Texture2D texture = Base64ToTexture(base64EncodedImage);
+                if (texture != null && displayImage != null)
+                {
+                    displayImage.texture = texture;
+                }
+            }
         }
     }
 
