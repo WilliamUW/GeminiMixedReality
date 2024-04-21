@@ -7,6 +7,8 @@ import google.generativeai as genai
 from IPython.display import display
 from IPython.display import Markdown
 import base64
+import mss
+from PIL import Image, ImageGrab
 
 
 def to_markdown(text):
@@ -19,6 +21,25 @@ app = Flask(__name__)
 GOOGLE_API_KEY = "AIzaSyBgoeGvnFVqUsqT0P3NKw2dB-VMRRAnPA8"
 
 
+async def capture_screen(filename="capture.png"):
+    with mss.mss() as sct:
+        # The screen part to capture
+        # Use the first monitor
+        monitor = sct.monitors[1]  # Index 1 is the first monitor
+
+        # Capture the screen
+        sct_img = sct.shot(mon=monitor, output=filename)
+
+        # Optionally, to convert the raw data captured by mss into a PIL Image:
+        # (This step is not necessary if you only need to save it as a file directly)
+        img = Image.open(sct_img)
+        img.save(filename)
+
+        print(f"Screenshot saved as {filename}")
+
+        return img
+
+
 @app.route("/data", methods=["POST"])
 async def receive_data():
     data = request.json
@@ -29,14 +50,24 @@ async def receive_data():
     # get screenshot
 
     # save screenshot
+    screenshot = ImageGrab.grab()
+
+    screenshot.save("capture.png")
+
+    # Close the screenshot
+    screenshot.close()
 
     # make gemini call
-    response = await geminiImageCall("Describe in detail what you see?", "test.png")
+    response = await geminiImageCall("Describe in detail what you see?")
 
     return (
         jsonify({"status": "success", "message": "We have received " + response}),
         200,
     )
+
+
+def image_file_to_base64(image_file):
+    return base64.b64encode(image_file.read()).decode("utf-8")
 
 
 def image_to_base64(image_path):
@@ -72,7 +103,7 @@ async def start():
     print(response)
 
 
-async def geminiImageCall(prompt, imageName):
+async def geminiImageCall(prompt, imageName="capture.png"):
     genai.configure(api_key=GOOGLE_API_KEY)
 
     model = genai.GenerativeModel("gemini-pro-vision")
