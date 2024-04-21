@@ -111,6 +111,7 @@ public class ScreenshotHandler : MonoBehaviour
 
     IEnumerator PostData(string input)
     {
+        string url = "http://127.0.0.1:5000/data";
         // Example data to send
         string jsonData = $"{{\"user_input\": \"{input}\"}}";
 
