@@ -23,7 +23,7 @@ public class ScreenshotHandler : MonoBehaviour
 
     void Start()
     {
-        GeminiImage();
+        GeminiImage(base64String);
         // Register the OnButtonPressed function to the button's onClick event
         if (captureButton != null)
         {
@@ -113,7 +113,7 @@ public class ScreenshotHandler : MonoBehaviour
 
     }
 
-    public async void GeminiImage()
+    public async void GeminiImage(string base64String)
     {
         var url = "https://generativelanguage.googleapis.com/v1/models/gemini-pro-vision:generateContent";
         var apiKey = "AIzaSyBgoeGvnFVqUsqT0P3NKw2dB-VMRRAnPA8";
@@ -150,22 +150,7 @@ public class ScreenshotHandler : MonoBehaviour
                     new { category = "HARM_CATEGORY_DANGEROUS_CONTENT", threshold = "BLOCK_NONE" }
                 };
 
-            var functionDeclarations = new
-            {
-                function_declarations = new[]
-                {
-                new
-                {
-                    name = "reset_position",
-                    description = "Resets the positions of the planets to their default states in the virtual scene.",
-                    parameters = new
-                    {
-                        type = "object",
-                        properties = new { }
-                    }
-                }
-            }
-            };
+       
 
 
             // Existing objects: conversation and safetySettings
