@@ -20,7 +20,7 @@ GOOGLE_API_KEY = "AIzaSyBgoeGvnFVqUsqT0P3NKw2dB-VMRRAnPA8"
 
 
 @app.route("/data", methods=["POST"])
-def receive_data():
+async def receive_data():
     data = request.json
     user_input = data["user_input"]
     print("Data Received:", data)
@@ -31,22 +31,10 @@ def receive_data():
     # save screenshot
 
     # make gemini call
-    genai.configure(api_key=GOOGLE_API_KEY)
-
-    model = genai.GenerativeModel("gemini-pro-vision")
-
-    base64_string = imagePathToBase64String("test.png")
-
-    cookie_picture = [{"mime_type": "image/png", "data": base64_string}]
-    prompt = "What do you see?"
-
-    response = model.generate_content(
-        contents=[{"text": prompt}, {"inline_data": cookie_picture}]
-    )
-    print(response.text)
+    response = await geminiImageCall("Describe in detail what you see?", "test.png")
 
     return (
-        jsonify({"status": "success", "message": "We have received " + user_input}),
+        jsonify({"status": "success", "message": "We have received " + response}),
         200,
     )
 
@@ -74,23 +62,27 @@ def imagePathToBase64String(imagePath):
     return base64_string
 
 
-def start():
+async def start():
     genai.configure(api_key=GOOGLE_API_KEY)
     for m in genai.list_models():
         if "generateContent" in m.supported_generation_methods:
             print(m.name)
+
+    response = await geminiImageCall("Describe in detail what you see?", "test.png")
+    print(response)
+
+
+async def geminiImageCall(prompt, imageName):
+    genai.configure(api_key=GOOGLE_API_KEY)
+
     model = genai.GenerativeModel("gemini-pro-vision")
 
-
     # Path to the image file and conversion to base64
-    image_path = Path("test.png")
+    image_path = Path(imageName)
     base64_image = image_to_base64(image_path)
 
     # Prepare the image data in the expected 'inline_data' format
     cookie_picture = {"inline_data": {"mime_type": "image/png", "data": base64_image}}
-
-    # Text prompt
-    prompt = "What do you see?"
 
     # Prepare contents with the correct structure
     contents = {
@@ -103,8 +95,7 @@ def start():
     # Generate content using the model
     response = model.generate_content(contents=contents)
     print(response.text)
-
-
+    return response.text
 
 
 if __name__ == "__main__":
