@@ -112,13 +112,6 @@ public class ScreenshotHandler : MonoBehaviour
 
         Debug.Log(encodedString);
         GeminiImage(encodedString);
-
-
-
-        // Display the screenshot in your MR environment
-        // DisplayScreenshotInMR(screenshot);
-
-
     }
     public async void GeminiImage(string base64String)
     {
