@@ -115,6 +115,7 @@ public class ScreenshotHandler : MonoBehaviour
         else
         {
             Debug.Log("Response: " + request.downloadHandler.text);
+            updateCaptureButtonText(request.downloadHandler.text);
         }
     }
 
