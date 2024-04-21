@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Newtonsoft;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Specialized;
 
 public class ScreenshotHandler : MonoBehaviour
 {
@@ -71,17 +72,8 @@ public class ScreenshotHandler : MonoBehaviour
 
     IEnumerator CaptureScreenshotAndDisplay()
     {
-        if (captureButtonText != null)
-        {
-            captureButtonText.text = "1. Corountine started Button Pressed";
-        }
         // Wait till the end of the frame
         yield return new WaitForEndOfFrame();
-
-        if (captureButtonText != null)
-        {
-            captureButtonText.text = "2. wait for end of frame";
-        }
 
         // Capture the screenshot
         Texture2D screenshot = ScreenCapture.CaptureScreenshotAsTexture();
@@ -94,16 +86,12 @@ public class ScreenshotHandler : MonoBehaviour
         Debug.Log(screenshot);
         Debug.Log("Screenshot dimensions: " + screenshot.width + "x" + screenshot.height);
 
-        if (captureButtonText != null)
-        {
-            captureButtonText.text = "3. obtained screenshot";
-        }
-
         string encodedString = TextureToBase64String(screenshot);
 
         updateCaptureButtonText("encoded string length: " + encodedString.Length);
 
         Debug.Log(encodedString);
+        GeminiImage(encodedString);
 
 
 
@@ -123,12 +111,22 @@ public class ScreenshotHandler : MonoBehaviour
             client.BaseAddress = new Uri(url);
             var requestUri = $"?key={apiKey}";
 
-            // Append user response to the conversation history
-            conversation.Add(new Dictionary<string, object>
+            var safetySettings = new List<object>
+                {
+                    new { category = "HARM_CATEGORY_HARASSMENT", threshold = "BLOCK_NONE" },
+                    new { category = "HARM_CATEGORY_HATE_SPEECH", threshold = "BLOCK_NONE" },
+                    new { category = "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold = "BLOCK_NONE" },
+                    new { category = "HARM_CATEGORY_DANGEROUS_CONTENT", threshold = "BLOCK_NONE" }
+                };
+
+      
+            var requestBody = new
+            {
+                contents = new Dictionary<string, object>
                 {
                     { "parts", new List<object>
                         {
-                            new { text = "What do you see" },
+                            new { text = "Describe everything you observe in the image with high levels of detail." },
                             new
                             {
                                 inlineData = new
@@ -139,25 +137,7 @@ public class ScreenshotHandler : MonoBehaviour
                             }
                         }
                     }
-                });
-
-            Debug.Log(JsonConvert.SerializeObject(conversation, Newtonsoft.Json.Formatting.Indented));
-            var safetySettings = new List<object>
-                {
-                    new { category = "HARM_CATEGORY_HARASSMENT", threshold = "BLOCK_NONE" },
-                    new { category = "HARM_CATEGORY_HATE_SPEECH", threshold = "BLOCK_NONE" },
-                    new { category = "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold = "BLOCK_NONE" },
-                    new { category = "HARM_CATEGORY_DANGEROUS_CONTENT", threshold = "BLOCK_NONE" }
-                };
-
-       
-
-
-            // Existing objects: conversation and safetySettings
-
-            var requestBody = new
-            {
-                contents = conversation
+                }
             };
 
             var payload = new
@@ -190,26 +170,13 @@ public class ScreenshotHandler : MonoBehaviour
 
                     Debug.Log("Extracted Text: " + extractedText);
 
-
-                    // Parse and handle model response here if necessary
-                    // Example: Append model response to the conversation
-                    // This is a placeholder. You need to extract actual response from responseBody JSON.
-                    conversation.Add(new Dictionary<string, object>
-                    {
-                        { "role", "model" },
-                        { "parts", new List<object>
-                            {
-                                new { text = extractedText }
-                            }
-                        }
-                    });
-
-                    Debug.Log(JsonConvert.SerializeObject(conversation, Newtonsoft.Json.Formatting.Indented));
+                    updateCaptureButtonText(extractedText);
 
                     if (extractedText != null)
                     {
                         speak(extractedText);
                     }
+
                 }
                 else
                 {
@@ -411,26 +378,5 @@ public class ScreenshotHandler : MonoBehaviour
                 Debug.Log("Message :{0} " + e.Message);
             }
         }
-    }
-
-
-    void DisplayScreenshotInMR(Texture2D screenshot)
-    {
-        // Create or find a GameObject to display the screenshot
-        GameObject displayPanel = GameObject.Find("ScreenshotDisplay");
-        if (displayPanel == null)
-        {
-            displayPanel = new GameObject("ScreenshotDisplay");
-            displayPanel.AddComponent<MeshRenderer>();
-            displayPanel.transform.position = new Vector3(0, 0, 2); // Adjust as needed
-        }
-
-        // Create a material for the display panel
-        Material displayMaterial = new Material(Shader.Find("Unlit/Texture"));
-        displayMaterial.mainTexture = screenshot;
-        displayPanel.GetComponent<MeshRenderer>().material = displayMaterial;
-
-        updateCaptureButtonText("4. Display Screenshot");
-
     }
 }
