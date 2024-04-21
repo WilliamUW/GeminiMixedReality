@@ -153,6 +153,23 @@ public class GoalManager : MonoBehaviour
             m_ObjectSpawner = FindObjectOfType<ObjectSpawner>();
 #endif
         }
+
+        if (m_FadeMaterial != null)
+            m_FadeMaterial.FadeSkybox(true);
+
+        if (m_PassthroughToggle != null)
+            m_PassthroughToggle.isOn = true;
+
+
+        StartCoroutine(TurnOnPlanes());
+        if (m_LearnButton != null)
+        {
+            m_LearnButton.SetActive(false);
+        }
+        m_SurfacesTapped = 0;
+        m_ObjectSpawner.objectSpawned += OnObjectSpawned;
+        m_AllGoalsFinished = true;
+        ForceEndAllGoals();
     }
 
     void OpenModal()

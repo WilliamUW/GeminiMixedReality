@@ -52,7 +52,7 @@ public class ScreenshotHandler : MonoBehaviour
         }
     }
 
-    void OnButtonPressed()
+    public void OnButtonPressed()
     {
         // Start the screenshot capture process
         StartCoroutine(CaptureScreenshotAndDisplay());
