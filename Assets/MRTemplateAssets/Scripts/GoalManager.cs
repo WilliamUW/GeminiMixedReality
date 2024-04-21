@@ -308,7 +308,7 @@ public class GoalManager : MonoBehaviour
         TurnOnVideoPlayer();
 
         if (m_VideoPlayerToggle != null)
-            m_VideoPlayerToggle.isOn = true;
+            m_VideoPlayerToggle.isOn = false;
 
 
         if (m_FadeMaterial != null)
