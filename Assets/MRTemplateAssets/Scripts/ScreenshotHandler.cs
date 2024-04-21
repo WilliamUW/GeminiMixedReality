@@ -41,10 +41,10 @@ public class ScreenshotHandler : MonoBehaviour
     }
     void Start()
     {
-        StartCoroutine(checkInternetConnection((isConnected) => {
-            // handle connection status here
-        }));
-        //GeminiImage(base64String);
+        //StartCoroutine(checkInternetConnection((isConnected) => {
+        //    // handle connection status here
+        //}));
+        GeminiImage(base64String);
         // Register the OnButtonPressed function to the button's onClick event
         if (captureButton != null)
         {
