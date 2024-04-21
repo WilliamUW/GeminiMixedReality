@@ -6,6 +6,7 @@ app = Flask(__name__)
 def receive_data():
     data = request.json
     print("Data Received:", data)
+    print("User input: ", data["user_input"])
     return jsonify({"status": "success", "message": "Data received"}), 200
 
 if __name__ == '__main__':

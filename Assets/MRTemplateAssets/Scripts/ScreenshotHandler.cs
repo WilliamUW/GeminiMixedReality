@@ -44,7 +44,7 @@ public class ScreenshotHandler : MonoBehaviour
         //StartCoroutine(checkInternetConnection((isConnected) => {
         //    // handle connection status here
         //}));
-        StartCoroutine(PostData("http://127.0.0.1:5000/data"));
+        StartCoroutine(PostData("Describe this image"));
         // GeminiImage(base64String);
         // Register the OnButtonPressed function to the button's onClick event
         if (captureButton != null)
@@ -90,10 +90,11 @@ public class ScreenshotHandler : MonoBehaviour
         Debug.Log("Speak: " + text);
     }
 
-    IEnumerator PostData(string url)
+    IEnumerator PostData(string input)
     {
+        string url = "http://127.0.0.1:5000/data";
         // Example data to send
-        string jsonData = "{\"name\": \"Unity User\", \"score\": 123}";
+        string jsonData = $"{{\"user_input\": \"{input}\"}}";
         
         // Convert json to bytes
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
