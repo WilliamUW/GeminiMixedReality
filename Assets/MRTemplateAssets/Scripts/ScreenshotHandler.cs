@@ -18,6 +18,7 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.Text;
 using Newtonsoft.Json;
+using SimpleJSON; // Make sure to include this
 public class ScreenshotHandler : MonoBehaviour
 {
     public UnityEngine.UI.Button captureButton; // Reference to the UI Button
@@ -95,10 +96,10 @@ public class ScreenshotHandler : MonoBehaviour
         string url = "http://127.0.0.1:5000/data";
         // Example data to send
         string jsonData = $"{{\"user_input\": \"{input}\"}}";
-        
+
         // Convert json to bytes
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
-        
+
         // Create a new UnityWebRequest with the target URL and method POST
         UnityWebRequest request = new UnityWebRequest(url, "POST");
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
@@ -115,7 +116,15 @@ public class ScreenshotHandler : MonoBehaviour
         else
         {
             Debug.Log("Response: " + request.downloadHandler.text);
-            updateCaptureButtonText(request.downloadHandler.text);
+            // Parse JSON to extract the 'message' field
+            var N = JSON.Parse(request.downloadHandler.text);
+            string message = N["message"]; // Assuming the field you're looking for is named 'message'
+
+            // Update button text with the message
+            updateCaptureButtonText(message);
+
+            // Additional log to show the extracted message
+            Debug.Log("Extracted Message: " + message);
         }
     }
 
