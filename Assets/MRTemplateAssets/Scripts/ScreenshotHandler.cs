@@ -44,7 +44,8 @@ public class ScreenshotHandler : MonoBehaviour
         //StartCoroutine(checkInternetConnection((isConnected) => {
         //    // handle connection status here
         //}));
-        GeminiImage(base64String);
+        StartCoroutine(PostData("http://127.0.0.1:5000/data"));
+        // GeminiImage(base64String);
         // Register the OnButtonPressed function to the button's onClick event
         if (captureButton != null)
         {
@@ -89,6 +90,32 @@ public class ScreenshotHandler : MonoBehaviour
         Debug.Log("Speak: " + text);
     }
 
+    IEnumerator PostData(string url)
+    {
+        // Example data to send
+        string jsonData = "{\"name\": \"Unity User\", \"score\": 123}";
+        
+        // Convert json to bytes
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
+        
+        // Create a new UnityWebRequest with the target URL and method POST
+        UnityWebRequest request = new UnityWebRequest(url, "POST");
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        // Send the request and wait for the response
+        yield return request.SendWebRequest();
+
+        if (request.isNetworkError || request.isHttpError)
+        {
+            Debug.LogError("Error: " + request.error);
+        }
+        else
+        {
+            Debug.Log("Response: " + request.downloadHandler.text);
+        }
+    }
 
     IEnumerator CaptureScreenshotAndDisplay()
     {
