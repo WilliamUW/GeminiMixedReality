@@ -19,8 +19,12 @@ using System.Collections;
 using System.Text;
 using Newtonsoft.Json;
 using SimpleJSON; // Make sure to include this
+using Meta.Voice.Samples.Dictation;
+
 public class ScreenshotHandler : MonoBehaviour
 {
+    public DictationActivation controller; // Assign this in the Inspector
+
     public UnityEngine.UI.Button captureButton; // Reference to the UI Button
     public TextMeshProUGUI captureButtonText; // Reference to the TextMeshPro UI component on the button
     public RawImage displayImage;  // Assign this in the inspector
@@ -42,6 +46,7 @@ public class ScreenshotHandler : MonoBehaviour
     }
     void Start()
     {
+        controller.ToggleActivation();
         StartCoroutine(checkInternetConnection((isConnected) => {
            // handle connection status here
         }));
