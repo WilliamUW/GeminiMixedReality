@@ -24,6 +24,8 @@ using Meta.Voice.Samples.Dictation;
 public class ScreenshotHandler : MonoBehaviour
 {
     public DictationActivation controller; // Assign this in the Inspector
+    public TextMeshProUGUI transcriptionText; // Reference to the TextMeshPro UI component on the button
+
 
     public UnityEngine.UI.Button captureButton; // Reference to the UI Button
     public TextMeshProUGUI captureButtonText; // Reference to the TextMeshPro UI component on the button
@@ -46,7 +48,6 @@ public class ScreenshotHandler : MonoBehaviour
     }
     void Start()
     {
-        controller.ToggleActivation();
         StartCoroutine(checkInternetConnection((isConnected) => {
            // handle connection status here
         }));
@@ -61,11 +62,18 @@ public class ScreenshotHandler : MonoBehaviour
 
     public void palmUpEnter() {
         Debug.Log("Gesture detected start");
+        controller.ToggleActivation();
+
         // OnButtonPressed();
     }
 
     public void palmUpEnd() {
         Debug.Log("Gesture end");
+        Debug.Log(transcriptionText.text);
+
+        updateCaptureButtonText(transcriptionText.text);
+        controller.ToggleActivation();
+
         // OnButtonPressed();
     }
 
