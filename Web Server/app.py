@@ -68,7 +68,7 @@ async def receive_data():
     screenshot.close()
 
     # make gemini call
-    response = await geminiImageCall("What do you see?")
+    response = await geminiImageCall(user_input)
 
     return (
         jsonify(
