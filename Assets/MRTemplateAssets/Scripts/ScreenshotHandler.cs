@@ -29,8 +29,9 @@ public class ScreenshotHandler : MonoBehaviour
     public UnityEngine.UI.Button clearButton;
     public TextMeshProUGUI transcriptionText; // Reference to the TextMeshPro UI component on the button
 
-    public UnityEngine.UI.InputField textToSpeechInputTextField; 
+    public UnityEngine.UI.InputField textToSpeechInputTextField;
     public Button textToSpeechStartButton; // Reference to the UI Button
+    public Button textToSpeechStopButton; // Reference to the UI Button
 
     MethodInfo onClickMethod = typeof(Button).GetMethod("Press", BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -57,12 +58,12 @@ public class ScreenshotHandler : MonoBehaviour
     }
     void Start()
     {
-        speak("hi there");
-        // StartCoroutine(checkInternetConnection((isConnected) =>
-        // {
-        //     // handle connection status here
-        // }));
-        // StartCoroutine(PostData("Describe this image"));
+        // speak("hi there");
+        StartCoroutine(checkInternetConnection((isConnected) =>
+        {
+            // handle connection status here
+        }));
+        StartCoroutine(PostData("Describe this image"));
         // GeminiImage(base64String);
         // Register the OnButtonPressed function to the button's onClick event
         if (captureButton != null)
@@ -71,10 +72,16 @@ public class ScreenshotHandler : MonoBehaviour
         }
     }
 
+    private void clickButton(UnityEngine.UI.Button button)
+    {
+        onClickMethod?.Invoke(button, null);
+    }
+
     public void palmUpEnter()
     {
         Debug.Log("Gesture detected start");
         onClickMethod?.Invoke(clearButton, null);
+        clickButton(textToSpeechStopButton);
         controller.ToggleActivation();
         updateCaptureButtonText("Listening...");
 
@@ -180,6 +187,8 @@ public class ScreenshotHandler : MonoBehaviour
         if (request.isNetworkError || request.isHttpError)
         {
             Debug.LogError("Error: " + request.error);
+            updateCaptureButtonText("Gemini rate limit, please try again.");
+            speak("Gemini rate limit, please try again.");
         }
         else
         {

@@ -141,8 +141,12 @@ async def geminiImageCall(prompt, imageName="capture.png"):
 
     # Generate content using the model
     response = model.generate_content(contents=contents)
-    print(response.text)
-    return {"text_response": response.text, "image": base64_image}
+    if hasattr(response, 'text'):
+        print(response.text)
+        return {"text_response": response.text, "image": base64_image}
+    else:
+        print("error", response)
+        return {"text_response": "Gemini Rate Limit Issue, please try again in 30 seconds!", "image": base64_image}
 
 
 if __name__ == "__main__":
