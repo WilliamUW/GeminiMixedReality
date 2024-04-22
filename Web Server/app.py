@@ -134,7 +134,7 @@ async def geminiImageCall(prompt, imageName="capture.png"):
     # Prepare contents with the correct structure
     contents = {
         "parts": [
-            {"text": prompt},
+            {"text": "User question: " + prompt + ". Please use the image to assist the user, answer concisely in a few sentences max."},
             cookie_picture,  # No additional nesting under 'image_data' key, directly use the dictionary
         ]
     }

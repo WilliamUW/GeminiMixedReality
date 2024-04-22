@@ -4751,7 +4751,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7586247135911237136, guid: 6ff7fbfe0243d604ea0d362d82d4baf2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.00034503784
+      value: 180.00037
       objectReference: {fileID: 0}
     - target: {fileID: 7586247136290578642, guid: 6ff7fbfe0243d604ea0d362d82d4baf2, type: 3}
       propertyPath: m_Name
@@ -15797,7 +15797,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   witDictation: {fileID: 0}
-  linesBetweenActivations: 1
+  linesBetweenActivations: 0
   activationSeparator: .
   onTranscriptionUpdated:
     m_PersistentCalls:
@@ -18918,7 +18918,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7586247135911237136, guid: 6ff7fbfe0243d604ea0d362d82d4baf2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.00031436863
+      value: 180.00023
       objectReference: {fileID: 0}
     - target: {fileID: 7586247136290578642, guid: 6ff7fbfe0243d604ea0d362d82d4baf2, type: 3}
       propertyPath: m_Name
