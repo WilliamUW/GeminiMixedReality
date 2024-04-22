@@ -54,16 +54,20 @@ public class ScreenshotHandler : MonoBehaviour
         }
     }
 
+    public void onPinch() {
+        Debug.Log("Pinch");
+    }
+
     public void OnButtonPressed()
     {
         // Start the screenshot capture process
         StartCoroutine(PostData("Describe this image"));
 
         // Optionally update the button text when pressed
-        // if (captureButtonText != null)
-        // {
-        //     captureButtonText.text = "Asking...";
-        // }
+        if (captureButtonText != null)
+        {
+            captureButtonText.text = "Asking...";
+        }
     }
 
     void updateCaptureButtonText(string text)

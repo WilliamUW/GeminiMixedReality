@@ -243,6 +243,7 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.Hands
             // even though the SystemGesture flag is no longer set.
             if (hasIndexPinching && m_SystemGestureState.Value != SystemGestureState.Ended)
             {
+                Debug.Log("Index pinching detected, keeping system gesture active.");
                 SetGestureState(SystemGestureState.Started, forceInvoke);
                 return;
             }

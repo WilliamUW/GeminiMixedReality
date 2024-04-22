@@ -61,23 +61,20 @@ async def receive_data():
     print("User input: ", user_input)
 
     # get screenshot
-
-    # save screenshot
     screenshot = ImageGrab.grab()
 
+    # save screenshot
     screenshot.save("capture.png")
-
-    # Close the screenshot
     screenshot.close()
 
     # make gemini call
-    response = await geminiImageCall("Describe in detail what you see?")
+    response = await geminiImageCall("What do you see?")
 
     return (
         jsonify(
             {
                 "status": "success",
-                "message": "We have received " + response["text_response"],
+                "message": response["text_response"],
                 "image": response["image"],
             }
         ),
@@ -149,5 +146,5 @@ async def geminiImageCall(prompt, imageName="capture.png"):
 
 
 if __name__ == "__main__":
-    start()
+    # start()
     app.run(host="127.0.0.1", port=5000, debug=True)
