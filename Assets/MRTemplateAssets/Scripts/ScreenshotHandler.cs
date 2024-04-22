@@ -20,10 +20,13 @@ using System.Text;
 using Newtonsoft.Json;
 using SimpleJSON; // Make sure to include this
 using Meta.Voice.Samples.Dictation;
+using System.Reflection;
+using Button = UnityEngine.UI.Button;
 
 public class ScreenshotHandler : MonoBehaviour
 {
     public DictationActivation controller; // Assign this in the Inspector
+    public UnityEngine.UI.Button clearButton;
     public TextMeshProUGUI transcriptionText; // Reference to the TextMeshPro UI component on the button
 
 
@@ -63,6 +66,7 @@ public class ScreenshotHandler : MonoBehaviour
     public void palmUpEnter() {
         Debug.Log("Gesture detected start");
         controller.ToggleActivation();
+        updateCaptureButtonText("Listening...");
 
         // OnButtonPressed();
     }
@@ -72,8 +76,11 @@ public class ScreenshotHandler : MonoBehaviour
         Debug.Log(transcriptionText.text);
 
         updateCaptureButtonText(transcriptionText.text);
-        controller.ToggleActivation();
+        transcriptionText.text = "";
 
+        controller.ToggleActivation();
+        MethodInfo onClickMethod = typeof(Button).GetMethod("Press", BindingFlags.NonPublic | BindingFlags.Instance);
+        onClickMethod?.Invoke(clearButton, null);
         // OnButtonPressed();
     }
 
