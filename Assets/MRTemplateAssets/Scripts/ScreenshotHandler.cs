@@ -28,6 +28,10 @@ public class ScreenshotHandler : MonoBehaviour
     public DictationActivation controller; // Assign this in the Inspector
     public UnityEngine.UI.Button clearButton;
     public TextMeshProUGUI transcriptionText; // Reference to the TextMeshPro UI component on the button
+
+    public UnityEngine.UI.InputField textToSpeechInputTextField; 
+    public Button textToSpeechStartButton; // Reference to the UI Button
+
     MethodInfo onClickMethod = typeof(Button).GetMethod("Press", BindingFlags.NonPublic | BindingFlags.Instance);
 
 
@@ -53,10 +57,12 @@ public class ScreenshotHandler : MonoBehaviour
     }
     void Start()
     {
-        StartCoroutine(checkInternetConnection((isConnected) => {
-           // handle connection status here
-        }));
-        StartCoroutine(PostData("Describe this image"));
+        speak("hi there");
+        // StartCoroutine(checkInternetConnection((isConnected) =>
+        // {
+        //     // handle connection status here
+        // }));
+        // StartCoroutine(PostData("Describe this image"));
         // GeminiImage(base64String);
         // Register the OnButtonPressed function to the button's onClick event
         if (captureButton != null)
@@ -65,7 +71,8 @@ public class ScreenshotHandler : MonoBehaviour
         }
     }
 
-    public void palmUpEnter() {
+    public void palmUpEnter()
+    {
         Debug.Log("Gesture detected start");
         onClickMethod?.Invoke(clearButton, null);
         controller.ToggleActivation();
@@ -74,7 +81,8 @@ public class ScreenshotHandler : MonoBehaviour
         // OnButtonPressed();
     }
 
-    public void palmUpEnd() {
+    public void palmUpEnd()
+    {
         Debug.Log("Gesture end");
         user_input = transcriptionText.text;
         Debug.Log(user_input);
@@ -129,6 +137,9 @@ public class ScreenshotHandler : MonoBehaviour
     void speak(string text)
     {
         Debug.Log("Speak: " + text);
+        textToSpeechInputTextField.text = text;
+        onClickMethod?.Invoke(textToSpeechStartButton, null);
+
     }
 
     private Texture2D Base64ToTexture(string base64)
@@ -179,6 +190,7 @@ public class ScreenshotHandler : MonoBehaviour
 
             // Update button text with the message
             updateCaptureButtonText(message);
+            speak(message);
 
             // Additional log to show the extracted message
             Debug.Log("Extracted Message: " + message);
