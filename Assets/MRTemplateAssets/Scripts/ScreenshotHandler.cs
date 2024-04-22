@@ -55,7 +55,8 @@ public class ScreenshotHandler : MonoBehaviour
     }
 
     public void onPinch() {
-        Debug.Log("Pinch");
+        Debug.Log("Gesture detected");
+        OnButtonPressed();
     }
 
     public void OnButtonPressed()
