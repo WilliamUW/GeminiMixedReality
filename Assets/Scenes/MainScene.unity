@@ -3837,7 +3837,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 381159655}
         m_TargetAssemblyTypeName: ScreenshotHandler, Assembly-CSharp
-        m_MethodName: onPinch
+        m_MethodName: palmUpEnter
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3863,10 +3863,9 @@ MonoBehaviour:
   m_GestureEnded:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.XR.Hands.Samples.Gestures.DebugTools.XRSelectedHandShapeDebugUI,
-          Unity.XR.Hands.Samples.Gestures
-        m_MethodName: ResetUI
+      - m_Target: {fileID: 381159655}
+        m_TargetAssemblyTypeName: ScreenshotHandler, Assembly-CSharp
+        m_MethodName: palmUpEnd
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

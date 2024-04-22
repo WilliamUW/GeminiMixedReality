@@ -54,9 +54,14 @@ public class ScreenshotHandler : MonoBehaviour
         }
     }
 
-    public void onPinch() {
-        Debug.Log("Gesture detected");
-        OnButtonPressed();
+    public void palmUpEnter() {
+        Debug.Log("Gesture detected start");
+        // OnButtonPressed();
+    }
+
+    public void palmUpEnd() {
+        Debug.Log("Gesture end");
+        // OnButtonPressed();
     }
 
     public void OnButtonPressed()
