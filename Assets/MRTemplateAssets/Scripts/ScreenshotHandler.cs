@@ -28,6 +28,7 @@ public class ScreenshotHandler : MonoBehaviour
     public DictationActivation controller; // Assign this in the Inspector
     public UnityEngine.UI.Button clearButton;
     public TextMeshProUGUI transcriptionText; // Reference to the TextMeshPro UI component on the button
+    MethodInfo onClickMethod = typeof(Button).GetMethod("Press", BindingFlags.NonPublic | BindingFlags.Instance);
 
 
     public UnityEngine.UI.Button captureButton; // Reference to the UI Button
@@ -65,6 +66,7 @@ public class ScreenshotHandler : MonoBehaviour
 
     public void palmUpEnter() {
         Debug.Log("Gesture detected start");
+        onClickMethod?.Invoke(clearButton, null);
         controller.ToggleActivation();
         updateCaptureButtonText("Listening...");
 
@@ -76,11 +78,8 @@ public class ScreenshotHandler : MonoBehaviour
         Debug.Log(transcriptionText.text);
 
         updateCaptureButtonText(transcriptionText.text);
-        transcriptionText.text = "";
 
         controller.ToggleActivation();
-        MethodInfo onClickMethod = typeof(Button).GetMethod("Press", BindingFlags.NonPublic | BindingFlags.Instance);
-        onClickMethod?.Invoke(clearButton, null);
         // OnButtonPressed();
     }
 
