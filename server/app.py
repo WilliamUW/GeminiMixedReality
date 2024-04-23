@@ -21,8 +21,9 @@ app = Flask(__name__)
 
 GOOGLE_API_KEY = "AIzaSyBgoeGvnFVqUsqT0P3NKw2dB-VMRRAnPA8"
 genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel("gemini-pro")
 chat = model.start_chat(history=[])
+
 
 async def capture_screen(filename="capture.png"):
     with mss.mss() as sct:
@@ -85,14 +86,30 @@ async def receive_data():
     screenshot.close()
 
     # make gemini call
-    response = await geminiImageCall(user_input)
+    visionResponse = await geminiImageCall(user_input)
+
+    image_description = visionResponse.text
+    imageString = visionResponse.image
+
+    prompt = (
+        "Respond to the user given their response and what they see. Answer concisely in a few sentences max. User reply: "
+        + user_input
+        + ". What the user sees: "
+        + image_description
+    )
+
+    response = chat.send_message(prompt)
+
+    print(chat.history)
+    model.count_tokens(chat.history)
+    print(response)
 
     return (
         jsonify(
             {
                 "status": "success",
                 "text": response.text,
-                "image": response.image,
+                "image": imageString,
             }
         ),
         200,
@@ -162,18 +179,19 @@ async def geminiImageCall(prompt, imageName="capture.png"):
 
     # Generate content using the model
     # response = visionmodel.generate_content(contents=contents)
+
     response = visionmodel.generate_content([prompt, img])
     response.resolve()
+    response.image = base64_image
+
     if hasattr(response, "text"):
         print(response.text)
-        response.image = base64_image
-        return response
     else:
         print("error", response)
-        return {
-            "text_response": "Gemini Rate Limit Issue, please try again in 30 seconds!",
-            "image": base64_image,
-        }
+        response.text = (
+            "Sorry, I have been rate-limited, give me 20 seconds to recover!"
+        )
+    return response
 
 
 if __name__ == "__main__":
