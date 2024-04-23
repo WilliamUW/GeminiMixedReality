@@ -46,6 +46,7 @@ public class ScreenshotHandler : MonoBehaviour
 
     public AudioSource audioSource;    // Reference to the AudioSource component
     public AudioClip[] audioClips;     // Array to hold multiple audio clips
+    public List<GameObject> spawnObjects = new List<GameObject>();
 
     IEnumerator checkInternetConnection(Action<bool> action)
     {
@@ -79,6 +80,12 @@ public class ScreenshotHandler : MonoBehaviour
         {
             audioSource = GetComponent<AudioSource>();
         }
+
+        var objectIndex = 0;
+        var newObject = Instantiate(spawnObjects[objectIndex]);
+        Vector3 spawnPoint = new Vector3(0, 1, 0);
+        newObject.transform.position = spawnPoint;
+        newObject.transform.localScale = new Vector3(1,1,1);
     }
 
     // Function to play an audio clip by index
