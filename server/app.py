@@ -39,10 +39,6 @@ global chat
 chat = model.start_chat(history=start_convo)
 
 
-def image_file_to_base64(image_file):
-    return base64.b64encode(image_file.read()).decode("utf-8")
-
-
 def image_to_base64(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode("utf-8")
@@ -125,9 +121,9 @@ async def receive_data():
     imageString = visionResponse.image
 
     prompt = (
-        "Respond to the user given their response and what they see. Answer concisely in a few sentences max. User reply: "
+        "Respond to the user given their response. Answer concisely in a few sentences max. User reply: "
         + user_input
-        + ". What the user sees: "
+        + ". Only if relevant to their reply, leverage what this description of what the user is seeing: "
         + image_description
     )
 
@@ -185,4 +181,3 @@ async def geminiImageCall(prompt, imageName="capture.png"):
 if __name__ == "__main__":
     # start()
     app.run(host="127.0.0.1", port=5000, debug=True)
-
