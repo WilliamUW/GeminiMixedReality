@@ -78,6 +78,11 @@ async def receive_data():
     print("Data Received:", data)
     print("User input: ", user_input)
 
+    if "reset" in data:
+        if data["reset"]:
+            print("resetting conversation")
+            chat = model.start_chat(history=[])
+
     # get screenshot
     screenshot = ImageGrab.grab()
 

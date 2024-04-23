@@ -196,7 +196,7 @@ public class ScreenshotHandler : MonoBehaviour
     IEnumerator PostData(string input)
     {
         // Example data to send
-        string jsonData = $"{{\"user_input\": \"{input}\"}}";
+        string jsonData = $"{{\"user_input\": \"{input}\", \"reset\": \"true\"}}";
 
         // Convert json to bytes
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
