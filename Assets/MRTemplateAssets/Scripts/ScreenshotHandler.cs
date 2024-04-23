@@ -81,13 +81,17 @@ public class ScreenshotHandler : MonoBehaviour
             audioSource = GetComponent<AudioSource>();
         }
 
-        var objectIndex = 0;
-        var newObject = Instantiate(spawnObjects[objectIndex]);
-        Vector3 spawnPoint = new Vector3(0, 1, 0);
-        newObject.transform.position = spawnPoint;
-        newObject.transform.localScale = new Vector3(1,1,1);
+        spawnObject();
     }
 
+    public void spawnObject()
+    {
+        var objectIndex = 0;
+        var newObject = Instantiate(spawnObjects[objectIndex]);
+        Vector3 spawnPoint = new Vector3(0, 0, 0);
+        newObject.transform.position = spawnPoint;
+        newObject.transform.localScale = new Vector3(1, 1, 1);
+    }
     // Function to play an audio clip by index
     public void PlayClip(int clipIndex)
     {

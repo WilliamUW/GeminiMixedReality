@@ -3693,6 +3693,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d14b106713a74b448bcab90869f1706e, type: 3}
   - {fileID: 8300000, guid: b319a2e4ff8f5d840b82d8635b645d22, type: 3}
   - {fileID: 8300000, guid: 6563b50a19a616142a1a693d7c0259cb, type: 3}
+  spawnObjects:
+  - {fileID: 1667034717825686887, guid: 694c0248895d1024fbf819260b222c1e, type: 3}
+  - {fileID: 5811970893536397571, guid: 12de3d11892198a4092dc2a8a2134790, type: 3}
 --- !u!4 &381159656
 Transform:
   m_ObjectHideFlags: 0
@@ -20886,6 +20889,22 @@ PrefabInstance:
       propertyPath: m_ObjectSelectorDropdown
       value: 
       objectReference: {fileID: 1891673207}
+    - target: {fileID: 4968769839778511794, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
+      propertyPath: m_ObjectPrefabs.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4968769839778511794, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
+      propertyPath: m_ObjectPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 919132149155446097, guid: 714a27c3372b8074d8370e2bc0cecf56, type: 3}
+    - target: {fileID: 4968769839778511794, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
+      propertyPath: m_ObjectPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: -927199367670048503, guid: 080ad8ef2223242198a30df487d9bcbb, type: 3}
+    - target: {fileID: 4968769839778511794, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
+      propertyPath: m_ObjectPrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 6209309998178532447, guid: b3830b3b2f190ee46a9c88433e985221, type: 3}
     - target: {fileID: 5143189979198810980, guid: 8b4d02b4e05af714dab2a12548a310f8, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
