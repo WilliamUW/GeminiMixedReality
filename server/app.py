@@ -22,8 +22,48 @@ app = Flask(__name__)
 GOOGLE_API_KEY = "AIzaSyBgoeGvnFVqUsqT0P3NKw2dB-VMRRAnPA8"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel("gemini-pro")
-chat = model.start_chat(history=[])
+global start_convo
+start_convo = [
+    {
+        "role": "user",
+        "parts": [
+            "You are GARVIS (Gemini Assisted Research Virtual Intelligence System): Leverage augmented reality and visual intelligence to analyze surroundings, provide contextual information, generate interactive 3D models, and assist with real-time decision-making. Operate as an interactive visual assistant that enhances user understanding and interaction in their immediate environment."
+        ],
+    },
+    {
+        "role": "model",
+        "parts": ["Ok, I am now GARVIS."],
+    },
+]
+global chat
+chat = model.start_chat(history=start_convo)
 
+
+def image_file_to_base64(image_file):
+    return base64.b64encode(image_file.read()).decode("utf-8")
+
+
+def image_to_base64(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode("utf-8")
+
+
+def imagePathToBase64String(imagePath):
+    # Path to the image file
+    image_path = Path(imagePath)
+
+    # Read the image file as bytes
+    image_bytes = image_path.read_bytes()
+
+    # Encode the bytes to a Base64 string
+    base64_bytes = base64.b64encode(image_bytes)
+
+    # Decode the Base64 bytes to a string for use in JSON or other text-based formats
+    base64_string = base64_bytes.decode("utf-8")
+
+    print(base64_string)
+
+    return base64_string
 
 async def capture_screen(filename="capture.png"):
     with mss.mss() as sct:
@@ -57,22 +97,10 @@ async def get():
     )
 
 
-@app.route("/reset", methods=["POST"])
-async def reset():
-    chat = model.start_chat(history=[])
-    return (
-        jsonify(
-            {
-                "status": "success",
-                "message": "hi",
-            }
-        ),
-        200,
-    )
-
-
 @app.route("/data", methods=["POST"])
 async def receive_data():
+    global chat
+    global start_convo
     data = request.json
     user_input = data["user_input"]
     print("Data Received:", data)
@@ -81,7 +109,7 @@ async def receive_data():
     if "reset" in data:
         if data["reset"]:
             print("resetting conversation")
-            chat = model.start_chat(history=[])
+            chat = model.start_chat(history=start_convo)
 
     # get screenshot
     screenshot = ImageGrab.grab()
@@ -91,7 +119,7 @@ async def receive_data():
     screenshot.close()
 
     # make gemini call
-    visionResponse = await geminiImageCall(user_input)
+    visionResponse = await geminiImageCall("Describe in detail what you see?")
 
     image_description = visionResponse.text
     imageString = visionResponse.image
@@ -106,7 +134,6 @@ async def receive_data():
     response = chat.send_message(prompt)
 
     print(chat.history)
-    model.count_tokens(chat.history)
     print(response)
 
     return (
@@ -119,33 +146,6 @@ async def receive_data():
         ),
         200,
     )
-
-
-def image_file_to_base64(image_file):
-    return base64.b64encode(image_file.read()).decode("utf-8")
-
-
-def image_to_base64(image_path):
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode("utf-8")
-
-
-def imagePathToBase64String(imagePath):
-    # Path to the image file
-    image_path = Path(imagePath)
-
-    # Read the image file as bytes
-    image_bytes = image_path.read_bytes()
-
-    # Encode the bytes to a Base64 string
-    base64_bytes = base64.b64encode(image_bytes)
-
-    # Decode the Base64 bytes to a string for use in JSON or other text-based formats
-    base64_string = base64_bytes.decode("utf-8")
-
-    print(base64_string)
-
-    return base64_string
 
 
 async def start():
@@ -161,32 +161,15 @@ async def start():
 async def geminiImageCall(prompt, imageName="capture.png"):
     visionmodel = genai.GenerativeModel("gemini-pro-vision")
 
-    # Path to the image file and conversion to base64
     image_path = Path(imageName)
     base64_image = image_to_base64(image_path)
 
-    # Prepare the image data in the expected 'inline_data' format
-    cookie_picture = {"inline_data": {"mime_type": "image/png", "data": base64_image}}
-
     img = PIL.Image.open(imageName)
-
-    # Prepare contents with the correct structure
-    contents = {
-        "parts": [
-            {
-                "text": "User question: "
-                + prompt
-                + ". Please use the image to assist the user, answer concisely in a few sentences max."
-            },
-            cookie_picture,  # No additional nesting under 'image_data' key, directly use the dictionary
-        ]
-    }
-
-    # Generate content using the model
-    # response = visionmodel.generate_content(contents=contents)
+    img_bytes = img.tobytes()
 
     response = visionmodel.generate_content([prompt, img])
     response.resolve()
+    print(response)
     response.image = base64_image
 
     if hasattr(response, "text"):
@@ -202,3 +185,4 @@ async def geminiImageCall(prompt, imageName="capture.png"):
 if __name__ == "__main__":
     # start()
     app.run(host="127.0.0.1", port=5000, debug=True)
+

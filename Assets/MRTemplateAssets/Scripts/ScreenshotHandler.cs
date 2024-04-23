@@ -67,7 +67,7 @@ public class ScreenshotHandler : MonoBehaviour
         {
             // handle connection status here
         }));
-        StartCoroutine(PostData("Describe this image"));
+        StartCoroutine(PostData("Introduce yourself as GARVIS to a new user.", true, false));
         // GeminiImage(base64String);
         // Register the OnButtonPressed function to the button's onClick event
         if (captureButton != null)
@@ -193,10 +193,18 @@ public class ScreenshotHandler : MonoBehaviour
         return null;
     }
 
-    IEnumerator PostData(string input)
+    IEnumerator PostData(string input, bool reset = false, bool announceQuestion = true)
     {
+        if (announceQuestion)
+        {
+            speak("I heard: " + input);
+        }
         // Example data to send
-        string jsonData = $"{{\"user_input\": \"{input}\", \"reset\": \"true\"}}";
+        string jsonData = $"{{\"user_input\": \"{input}\"}}";
+        if (reset)
+        {
+            jsonData = $"{{\"user_input\": \"{input}\", \"reset\": \"true\"}}";
+        }
 
         // Convert json to bytes
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
