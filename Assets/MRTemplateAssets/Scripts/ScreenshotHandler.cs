@@ -88,7 +88,7 @@ public class ScreenshotHandler : MonoBehaviour
     {
         var objectIndex = 0;
         var newObject = Instantiate(spawnObjects[objectIndex]);
-        Vector3 spawnPoint = new Vector3(0, 0, 0);
+        Vector3 spawnPoint = new Vector3(0, 1, 1);
         newObject.transform.position = spawnPoint;
         newObject.transform.localScale = new Vector3(1, 1, 1);
     }
@@ -206,6 +206,10 @@ public class ScreenshotHandler : MonoBehaviour
 
     IEnumerator PostData(string input, bool reset = false, bool announceQuestion = true)
     {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            yield break;
+        }
         if (announceQuestion)
         {
             speak("I heard: " + input);
