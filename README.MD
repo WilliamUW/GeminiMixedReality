@@ -1,20 +1,38 @@
-1. Start local python web server
+1. Pre-requisites
 
 ```
-cd Web Server
+cd server
+
+choco install ngrok
+
+ngrok config add-authtoken <token>
+```
+
+2. Start local python web server
+
+In server folder
+```
+cd server
 pip install -r requirements.txt
 python app.py
 ```
 
-In separate terminal, run:
+3. Make public with ngrok
+
+In separate terminal in server folder, run:
 ```
-ngrok http 5000
+cd server
+ngrok http http://127.0.0.1:5000
 ```
 
-Paste public url into Quest 3 app.
+Set the ngrok forwarding public url as the Quest 3 app's "url" constant variable.
 
-2. Run app in Quest 3
+E.g. "https://83aa-99-227-197-26.ngrok-free.app"
 
-Build and run to Quest 3.
+4. Build and run to Quest 3.
 
-Start casting to computer.
+Build "mainScene" to Quest 3.
+
+5. Start casting to computer.
+
+6. Talk to GARVIS by having your palm up.

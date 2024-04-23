@@ -74,8 +74,8 @@ async def receive_data():
         jsonify(
             {
                 "status": "success",
-                "message": response["text_response"],
-                "image": response["image"],
+                "text": response.text,
+                "image": response.image,
             }
         ),
         200,
@@ -143,7 +143,8 @@ async def geminiImageCall(prompt, imageName="capture.png"):
     response = model.generate_content(contents=contents)
     if hasattr(response, 'text'):
         print(response.text)
-        return {"text_response": response.text, "image": base64_image}
+        response.image = base64_image
+        return response
     else:
         print("error", response)
         return {"text_response": "Gemini Rate Limit Issue, please try again in 30 seconds!", "image": base64_image}
