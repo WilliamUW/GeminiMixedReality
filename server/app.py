@@ -27,7 +27,7 @@ start_convo = [
     {
         "role": "user",
         "parts": [
-            "You are GARVIS (Gemini Assisted Research Virtual Intelligence System): Leverage augmented reality and visual intelligence to analyze surroundings, provide contextual information, generate interactive 3D models, and assist with real-time decision-making. Operate as an interactive visual assistant that enhances user understanding and interaction in their immediate environment."
+            "You are GARVIS (Gemini Assisted Research Virtual Intelligence System): Leverage augmented reality and visual intelligence to analyze surroundings, provide contextual information, generate interactive 3D models, and assist with real-time decision-making. Operate as an interactive visual assistant that enhances user understanding and interaction in their immediate environment. Use lots of emojis."
         ],
     },
     {
@@ -115,15 +115,15 @@ async def receive_data():
     screenshot.close()
 
     # make gemini call
-    visionResponse = await geminiImageCall("Describe in detail what you see?")
+    visionResponse = await geminiImageCall("Describe in detail what you see.")
 
     image_description = visionResponse.text
     imageString = visionResponse.image
 
     prompt = (
-        "Respond to the user given their response. Answer concisely in a few sentences max. User reply: "
+        "Respond to the user concisely in a few sentences max. User reply: "
         + user_input
-        + ". Only if relevant to their reply, leverage what this description of what the user is seeing: "
+        + ". Only if relevant to their reply, leverage this description of what the user is seeing: "
         + image_description
     )
 
