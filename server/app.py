@@ -1,3 +1,4 @@
+import PIL
 from flask import Flask, request, jsonify
 from pathlib import Path
 import textwrap
@@ -19,7 +20,9 @@ def to_markdown(text):
 app = Flask(__name__)
 
 GOOGLE_API_KEY = "AIzaSyBgoeGvnFVqUsqT0P3NKw2dB-VMRRAnPA8"
-
+genai.configure(api_key=GOOGLE_API_KEY)
+model = genai.GenerativeModel('gemini-pro')
+chat = model.start_chat(history=[])
 
 async def capture_screen(filename="capture.png"):
     with mss.mss() as sct:
@@ -42,6 +45,20 @@ async def capture_screen(filename="capture.png"):
 
 @app.route("/data", methods=["GET"])
 async def get():
+    return (
+        jsonify(
+            {
+                "status": "success",
+                "message": "hi",
+            }
+        ),
+        200,
+    )
+
+
+@app.route("/reset", methods=["POST"])
+async def reset():
+    chat = model.start_chat(history=[])
     return (
         jsonify(
             {
@@ -120,9 +137,7 @@ async def start():
 
 
 async def geminiImageCall(prompt, imageName="capture.png"):
-    genai.configure(api_key=GOOGLE_API_KEY)
-
-    model = genai.GenerativeModel("gemini-pro-vision")
+    visionmodel = genai.GenerativeModel("gemini-pro-vision")
 
     # Path to the image file and conversion to base64
     image_path = Path(imageName)
@@ -131,23 +146,34 @@ async def geminiImageCall(prompt, imageName="capture.png"):
     # Prepare the image data in the expected 'inline_data' format
     cookie_picture = {"inline_data": {"mime_type": "image/png", "data": base64_image}}
 
+    img = PIL.Image.open(imageName)
+
     # Prepare contents with the correct structure
     contents = {
         "parts": [
-            {"text": "User question: " + prompt + ". Please use the image to assist the user, answer concisely in a few sentences max."},
+            {
+                "text": "User question: "
+                + prompt
+                + ". Please use the image to assist the user, answer concisely in a few sentences max."
+            },
             cookie_picture,  # No additional nesting under 'image_data' key, directly use the dictionary
         ]
     }
 
     # Generate content using the model
-    response = model.generate_content(contents=contents)
-    if hasattr(response, 'text'):
+    # response = visionmodel.generate_content(contents=contents)
+    response = visionmodel.generate_content([prompt, img])
+    response.resolve()
+    if hasattr(response, "text"):
         print(response.text)
         response.image = base64_image
         return response
     else:
         print("error", response)
-        return {"text_response": "Gemini Rate Limit Issue, please try again in 30 seconds!", "image": base64_image}
+        return {
+            "text_response": "Gemini Rate Limit Issue, please try again in 30 seconds!",
+            "image": base64_image,
+        }
 
 
 if __name__ == "__main__":
