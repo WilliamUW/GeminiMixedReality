@@ -10,6 +10,7 @@ from IPython.display import Markdown
 import base64
 import mss
 from PIL import Image, ImageGrab
+import requests
 
 
 def to_markdown(text):
@@ -19,9 +20,90 @@ def to_markdown(text):
 
 app = Flask(__name__)
 
+
+def get_tutorial():
+    print("Getting tutorial")
+
+
 GOOGLE_API_KEY = "AIzaSyBgoeGvnFVqUsqT0P3NKw2dB-VMRRAnPA8"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel("gemini-pro")
+
+tool_config = {"function_calling_config": {"mode": "auto"}}
+model = genai.GenerativeModel(
+    "gemini-pro",
+    tools=[
+        {
+            "function_declarations": [
+                {
+                    "name": "find_movies",
+                    "description": "find movie titles currently playing in theaters based on any description, genre, title words, etc.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string",
+                                "description": "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616",
+                            },
+                            "description": {
+                                "type": "string",
+                                "description": "Any kind of description including category or genre, title words, attributes, etc.",
+                            },
+                        },
+                        "required": ["description"],
+                    },
+                },
+                {
+                    "name": "find_theaters",
+                    "description": "find theaters based on location and optionally movie title which is currently playing in theaters",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string",
+                                "description": "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616",
+                            },
+                            "movie": {
+                                "type": "string",
+                                "description": "Any movie title",
+                            },
+                        },
+                        "required": ["location"],
+                    },
+                },
+                {
+                    "name": "get_showtimes",
+                    "description": "Find the start times for movies playing in a specific theater",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "type": "string",
+                                "description": "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616",
+                            },
+                            "movie": {
+                                "type": "string",
+                                "description": "Any movie title",
+                            },
+                            "theater": {
+                                "type": "string",
+                                "description": "Name of the theater",
+                            },
+                            "date": {
+                                "type": "string",
+                                "description": "Date for requested showtime",
+                            },
+                        },
+                        "required": ["location", "movie", "theater", "date"],
+                    },
+                },
+            ]
+        }
+    ],
+    tool_config=tool_config,
+)
+
+
 global start_convo
 start_convo = [
     {
@@ -36,7 +118,7 @@ start_convo = [
     },
 ]
 global chat
-chat = model.start_chat(history=start_convo)
+chat = model.start_chat(history=start_convo, enable_automatic_function_calling=True)
 
 
 def image_to_base64(image_path):
@@ -60,6 +142,7 @@ def imagePathToBase64String(imagePath):
     print(base64_string)
 
     return base64_string
+
 
 async def capture_screen(filename="capture.png"):
     with mss.mss() as sct:
@@ -105,7 +188,9 @@ async def receive_data():
     if "reset" in data:
         if data["reset"]:
             print("resetting conversation")
-            chat = model.start_chat(history=start_convo)
+            chat = model.start_chat(
+                history=start_convo, enable_automatic_function_calling=True
+            )
 
     # get screenshot
     screenshot = ImageGrab.grab()
@@ -115,10 +200,10 @@ async def receive_data():
     screenshot.close()
 
     # make gemini call
-    visionResponse = await geminiImageCall("Describe in detail what you see.")
+    # visionResponse = await geminiImageCall("Describe in detail what you see.")
 
-    image_description = visionResponse.text
-    imageString = visionResponse.image
+    image_description = "" # visionResponse.text
+    imageString = "" # visionResponse.image
 
     prompt = (
         "Respond to the user concisely in a few sentences max. User reply: "
@@ -131,17 +216,32 @@ async def receive_data():
 
     print(chat.history)
     print(response)
-
-    return (
-        jsonify(
-            {
-                "status": "success",
-                "text": response.text,
-                "image": imageString,
-            }
-        ),
-        200,
-    )
+    if response.parts[0].function_call:
+        function_call = response.parts[0].function_call
+        function_name = function_call.name
+        return (
+            jsonify(
+                {
+                    "status": "success",
+                    "type": "function",
+                    "text": function_name,
+                    "image": imageString,
+                }
+            ),
+            200,
+        )
+    else:
+        return (
+            jsonify(
+                {
+                    "status": "success",
+                    "type": "text",
+                    "text": response.text,
+                    "image": imageString,
+                }
+            ),
+            200,
+        )
 
 
 async def start():
