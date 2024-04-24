@@ -93,7 +93,7 @@ start_convo = [
     {
         "role": "user",
         "parts": [
-            "You are GARVIS (Gemini Assisted Research Virtual Intelligence System): Leverage augmented reality and visual intelligence to analyze surroundings, provide contextual information, generate interactive 3D models, and assist with real-time decision-making. Operate as an interactive visual assistant that enhances user understanding and interaction in their immediate environment. Use lots of emojis."
+            "You are GARVIS (Gemini Assisted Research Virtual Intelligence System): Leverage augmented reality and visual intelligence to analyze surroundings, provide contextual information, generate interactive 3D models, and assist with real-time decision-making. Operate as an interactive visual assistant that enhances user understanding and interaction in their immediate environment."
         ],
     },
     {
@@ -208,12 +208,19 @@ async def receive_data():
     if response.parts[0].function_call:
         function_call = response.parts[0].function_call
         function_name = function_call.name
+        additional_information = ""
+        if (function_name == "check_calendar"):
+            additional_information = "The user has a flight to New York's LaGuardia Airport tomorrow at 8pm. Render a 3d map of NYC and the flight path into LaGaurdia."
+        afterFunctionResponse = chat.send_message("Respond to the user telling them which function call has been performed and answer their query. Additional information: " + additional_information, tools=[])
+        print(afterFunctionResponse)
+
         return (
             jsonify(
                 {
                     "status": "success",
                     "type": "function",
-                    "text": function_name,
+                    "function_name": function_name,
+                    "text": afterFunctionResponse.text,
                     "image": imageString,
                 }
             ),

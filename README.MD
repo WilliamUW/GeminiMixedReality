@@ -10,19 +10,15 @@ ngrok config add-authtoken <token>
 
 2. Start local python web server
 
-In server folder
 ```
-cd server
-pip install -r requirements.txt
-python app.py
+cd server && pip install -r requirements.txt && python app.py
 ```
 
 3. Make public with ngrok
 
 In separate terminal in server folder, run:
 ```
-cd server
-ngrok http http://127.0.0.1:5000
+cd server && ngrok http http://127.0.0.1:5000
 ```
 
 Set the ngrok forwarding public url as the Quest 3 app's "url" constant variable.
