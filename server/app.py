@@ -36,65 +36,45 @@ model = genai.GenerativeModel(
         {
             "function_declarations": [
                 {
-                    "name": "find_movies",
-                    "description": "find movie titles currently playing in theaters based on any description, genre, title words, etc.",
+                    "name": "find_tutorials",
+                    "description": "if the user needs help with something, find tutorials a relevant tutorial for them",
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "location": {
+                            "object": {
                                 "type": "string",
-                                "description": "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616",
-                            },
-                            "description": {
-                                "type": "string",
-                                "description": "Any kind of description including category or genre, title words, attributes, etc.",
+                                "description": "the object they need help with",
                             },
                         },
                         "required": ["description"],
                     },
                 },
                 {
-                    "name": "find_theaters",
-                    "description": "find theaters based on location and optionally movie title which is currently playing in theaters",
+                    "name": "render_flight_path",
+                    "description": "render flight path if the user has an upcoming flight",
                     "parameters": {
                         "type": "object",
                         "properties": {
                             "location": {
                                 "type": "string",
                                 "description": "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616",
-                            },
-                            "movie": {
-                                "type": "string",
-                                "description": "Any movie title",
                             },
                         },
                         "required": ["location"],
                     },
                 },
                 {
-                    "name": "get_showtimes",
-                    "description": "Find the start times for movies playing in a specific theater",
+                    "name": "render_space_objects",
+                    "description": "render space if the user is interested asks about space phenomena e.g. eclipse",
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "location": {
+                            "object": {
                                 "type": "string",
-                                "description": "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616",
-                            },
-                            "movie": {
-                                "type": "string",
-                                "description": "Any movie title",
-                            },
-                            "theater": {
-                                "type": "string",
-                                "description": "Name of the theater",
-                            },
-                            "date": {
-                                "type": "string",
-                                "description": "Date for requested showtime",
+                                "description": "The object of interest for the user to visualize",
                             },
                         },
-                        "required": ["location", "movie", "theater", "date"],
+                        "required": ["object"],
                     },
                 },
             ]
