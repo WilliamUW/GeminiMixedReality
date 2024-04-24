@@ -64,8 +64,12 @@ model = genai.GenerativeModel(
                     },
                 },
                 {
+                    "name": "check_calendar",
+                    "description": "check the user's calendar for upcoming events and provide a summary",
+                },
+                {
                     "name": "render_space_objects",
-                    "description": "render space if the user is interested asks about space phenomena e.g. eclipse",
+                    "description": "render space objects if the user mentions any space phenomena e.g. eclipse",
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -179,11 +183,16 @@ async def receive_data():
     screenshot.save("capture.png")
     screenshot.close()
 
-    # make gemini call
-    # visionResponse = await geminiImageCall("Describe in detail what you see.")
+    image_path = Path("capture.png")
+    imageString = image_to_base64(image_path)
 
     image_description = "" # visionResponse.text
-    imageString = "" # visionResponse.image
+
+    if ("this" in user_input) or ("that" in user_input):
+        # make gemini call
+        visionResponse = await geminiImageCall("Describe in detail what you see.")
+        image_description = visionResponse.text
+
 
     prompt = (
         "Respond to the user concisely in a few sentences max. User reply: "
@@ -237,16 +246,12 @@ async def start():
 async def geminiImageCall(prompt, imageName="capture.png"):
     visionmodel = genai.GenerativeModel("gemini-pro-vision")
 
-    image_path = Path(imageName)
-    base64_image = image_to_base64(image_path)
-
     img = PIL.Image.open(imageName)
     img_bytes = img.tobytes()
 
     response = visionmodel.generate_content([prompt, img])
     response.resolve()
     print(response)
-    response.image = base64_image
 
     if hasattr(response, "text"):
         print(response.text)
