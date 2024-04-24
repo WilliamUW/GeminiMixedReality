@@ -68,8 +68,8 @@ model = genai.GenerativeModel(
                     "description": "check the user's calendar for upcoming events and provide a summary",
                 },
                 {
-                    "name": "render_space_objects",
-                    "description": "render space objects if the user mentions any space phenomena e.g. eclipse",
+                    "name": "render_eclipse",
+                    "description": "render eclipse if the user mentions the eclipse",
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -211,7 +211,7 @@ async def receive_data():
         additional_information = ""
         if (function_name == "check_calendar"):
             additional_information = "The user has a flight to New York's LaGuardia Airport tomorrow at 8pm. Render a 3d map of NYC and the flight path into LaGaurdia."
-        afterFunctionResponse = chat.send_message("Respond to the user telling them which function call has been performed and answer their query. Additional information: " + additional_information, tools=[])
+        afterFunctionResponse = chat.send_message("Answer the user's question now that the action has been performed. Additional information: " + additional_information, tools=[])
         print(afterFunctionResponse)
 
         return (
