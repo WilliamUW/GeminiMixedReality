@@ -3696,6 +3696,7 @@ MonoBehaviour:
   spawnObjects:
   - {fileID: 1291399506}
   - {fileID: 1667034717825686887, guid: 8f3d59a4be75e4a449d5f7788a3b17d4, type: 3}
+  - {fileID: 1667034717825686887, guid: a4ce8e2692fdfbb47a8981cbf912bbe3, type: 3}
 --- !u!4 &381159656
 Transform:
   m_ObjectHideFlags: 0
