@@ -3305,7 +3305,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1503989109714432937, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3297219238015160179, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
       propertyPath: m_Camera
@@ -3694,8 +3694,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b319a2e4ff8f5d840b82d8635b645d22, type: 3}
   - {fileID: 8300000, guid: 6563b50a19a616142a1a693d7c0259cb, type: 3}
   spawnObjects:
-  - {fileID: 1667034717825686887, guid: 694c0248895d1024fbf819260b222c1e, type: 3}
-  - {fileID: 5811970893536397571, guid: 12de3d11892198a4092dc2a8a2134790, type: 3}
+  - {fileID: 1291399506}
+  - {fileID: 1667034717825686887, guid: 8f3d59a4be75e4a449d5f7788a3b17d4, type: 3}
 --- !u!4 &381159656
 Transform:
   m_ObjectHideFlags: 0
@@ -12294,7 +12294,7 @@ GameObject:
   - component: {fileID: 1291399513}
   - component: {fileID: 1291399514}
   m_Layer: 0
-  m_Name: Spatial Panel Manipulator
+  m_Name: Video Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
