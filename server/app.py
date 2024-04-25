@@ -11,7 +11,10 @@ import base64
 import mss
 from PIL import Image, ImageGrab
 import requests
-
+from dotenv import load_dotenv
+import os
+# Load environment variables from .env file
+load_dotenv()
 
 def to_markdown(text):
     text = text.replace("•", "  *")
@@ -25,7 +28,8 @@ def get_tutorial():
     print("Getting tutorial")
 
 
-GOOGLE_API_KEY = "AIzaSyBgoeGvnFVqUsqT0P3NKw2dB-VMRRAnPA8"
+
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel("gemini-pro")
 
