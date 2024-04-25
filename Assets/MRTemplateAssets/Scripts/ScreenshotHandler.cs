@@ -47,6 +47,7 @@ public class ScreenshotHandler : MonoBehaviour
     public AudioSource audioSource;    // Reference to the AudioSource component
     public AudioClip[] audioClips;     // Array to hold multiple audio clips
     public List<GameObject> spawnObjects = new List<GameObject>();
+    public GameObject tutorialPanel;
 
     IEnumerator checkInternetConnection(Action<bool> action)
     {
@@ -63,6 +64,8 @@ public class ScreenshotHandler : MonoBehaviour
     }
     void Start()
     {
+        tutorialPanel.SetActive(true);
+
         // speak("hi there");
         StartCoroutine(checkInternetConnection((isConnected) =>
         {
@@ -267,8 +270,8 @@ public class ScreenshotHandler : MonoBehaviour
                         spawnObject(3);
                         break;
                     case "user_needs_help":
-                        spawnObject(0);
                         spawnObject(1);
+                        tutorialPanel.SetActive(true);
                         break;
                     case "render_eclipse":
                         spawnObject(2);

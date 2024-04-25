@@ -305,15 +305,6 @@ public class GoalManager : MonoBehaviour
     {
         m_CoachingUIParent.transform.localScale = Vector3.zero;
 
-        // TurnOnVideoPlayer();
-        if (m_VideoPlayer != null)
-        {
-            m_VideoPlayer.SetActive(false);
-
-            if (m_VideoPlayerToggle != null)
-                m_VideoPlayerToggle.isOn = false;
-        }
-        
         if (m_FadeMaterial != null)
         {
             m_FadeMaterial.FadeSkybox(true);

@@ -37,7 +37,7 @@ model = genai.GenerativeModel(
             "function_declarations": [
                 {
                     "name": "user_needs_help",
-                    "description": "if the user needs help with anything, help them by finding relevant tutorials for them",
+                    "description": "if the user says I need help, or needs help with anything, help them by finding relevant tutorials for them",
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -186,20 +186,23 @@ async def receive_data():
     image_path = Path("capture.png")
     imageString = image_to_base64(image_path)
 
-    image_description = "No image description." # visionResponse.text
+    image_description = "No image description."  # visionResponse.text
 
-    if ("this" in user_input) or ("that" in user_input):
+    prompt = user_input
+
+    if "help" in user_input:
+        prompt = user_input + ". user is looking at a Cooler Master 212 EVO CPU Cooler."
+
+    elif ("this" in user_input) or ("that" in user_input):
         # make gemini call
         visionResponse = await geminiImageCall("Describe in detail what you see.")
         image_description = visionResponse.text
-
-
-    prompt = (
-        "User reply: "
-        + user_input
-        + ". Only if relevant to their reply, leverage this description of what the user is seeing: "
-        + image_description
-    )
+        prompt = (
+            "User reply: "
+            + user_input
+            + ". Only if relevant to their reply, use this description of what the user is seeing: "
+            + image_description
+        )
 
     response = chat.send_message(prompt)
 
@@ -209,16 +212,22 @@ async def receive_data():
         function_call = response.parts[0].function_call
         function_name = function_call.name
         additional_information = ""
-        match  (function_name):
+        match (function_name):
             case "user_needs_help":
                 additional_information = "I have rendered a 3d model of the object you need help with, as well as tutorial video."
-            
+
             case "check_calendar":
                 additional_information = "The user has a flight to New York's LaGuardia Airport tomorrow at 8am. I have rendered a 3d map of NYC to better assist your travels including the location of your hotel in Soho, your upcoming meetings at the World Trade Center, and your upcoming dinner in Brooklyn."
 
             case "render_eclipse":
-                additional_information = "I have rendered a 3d model of the eclipse for you to visualize."
-        afterFunctionResponse = chat.send_message("Respond to the user that the action has been performed. Additional information: " + additional_information, tools=[])
+                additional_information = (
+                    "I have rendered a 3d model of the eclipse for you to visualize."
+                )
+        afterFunctionResponse = chat.send_message(
+            "Respond to the user that the action has been performed. Additional information: "
+            + additional_information,
+            tools=[],
+        )
         print(afterFunctionResponse)
 
         return (
