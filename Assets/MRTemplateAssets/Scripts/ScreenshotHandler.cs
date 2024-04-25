@@ -266,7 +266,7 @@ public class ScreenshotHandler : MonoBehaviour
                     case "check_calendar":
                         spawnObject(3);
                         break;
-                    case "find_tutorials":
+                    case "user_needs_help":
                         spawnObject(0);
                         spawnObject(1);
                         break;

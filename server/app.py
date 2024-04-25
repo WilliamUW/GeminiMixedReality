@@ -36,8 +36,8 @@ model = genai.GenerativeModel(
         {
             "function_declarations": [
                 {
-                    "name": "find_tutorials",
-                    "description": "if the user needs help with something, find tutorials a relevant tutorial for them",
+                    "name": "user_needs_help",
+                    "description": "if the user needs help with anything, help them by finding relevant tutorials for them",
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -69,7 +69,7 @@ model = genai.GenerativeModel(
                 },
                 {
                     "name": "render_eclipse",
-                    "description": "render eclipse if the user mentions the eclipse",
+                    "description": "Explain the eclipse if the user mentions the eclipse and render a 3d model of the eclipse",
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -93,7 +93,7 @@ start_convo = [
     {
         "role": "user",
         "parts": [
-            "You are GARVIS (Gemini Assisted Research Virtual Intelligence System): Leverage augmented reality and visual intelligence to analyze surroundings, provide contextual information, generate interactive 3D models, and assist with real-time decision-making. Operate as an interactive visual assistant that enhances user understanding and interaction in their immediate environment."
+            "You are GARVIS (Gemini Assisted Research Virtual Intelligence System): Leverage augmented reality and visual intelligence to analyze surroundings, provide contextual information, generate interactive 3D models, and assist with real-time decision-making. Operate as an interactive visual assistant that enhances user understanding and interaction in their immediate environment. Respond to the user concisely in a few sentences max."
         ],
     },
     {
@@ -186,7 +186,7 @@ async def receive_data():
     image_path = Path("capture.png")
     imageString = image_to_base64(image_path)
 
-    image_description = "" # visionResponse.text
+    image_description = "No image description." # visionResponse.text
 
     if ("this" in user_input) or ("that" in user_input):
         # make gemini call
@@ -195,7 +195,7 @@ async def receive_data():
 
 
     prompt = (
-        "Respond to the user concisely in a few sentences max. User reply: "
+        "User reply: "
         + user_input
         + ". Only if relevant to their reply, leverage this description of what the user is seeing: "
         + image_description
@@ -209,9 +209,16 @@ async def receive_data():
         function_call = response.parts[0].function_call
         function_name = function_call.name
         additional_information = ""
-        if (function_name == "check_calendar"):
-            additional_information = "The user has a flight to New York's LaGuardia Airport tomorrow at 8pm. Render a 3d map of NYC and the flight path into LaGaurdia."
-        afterFunctionResponse = chat.send_message("Answer the user's question now that the action has been performed. Additional information: " + additional_information, tools=[])
+        match  (function_name):
+            case "user_needs_help":
+                additional_information = "I have rendered a 3d model of the object you need help with, as well as tutorial video."
+            
+            case "check_calendar":
+                additional_information = "The user has a flight to New York's LaGuardia Airport tomorrow at 8am. I have rendered a 3d map of NYC to better assist your travels including the location of your hotel in Soho, your upcoming meetings at the World Trade Center, and your upcoming dinner in Brooklyn."
+
+            case "render_eclipse":
+                additional_information = "I have rendered a 3d model of the eclipse for you to visualize."
+        afterFunctionResponse = chat.send_message("Respond to the user that the action has been performed. Additional information: " + additional_information, tools=[])
         print(afterFunctionResponse)
 
         return (
