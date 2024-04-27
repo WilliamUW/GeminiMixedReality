@@ -42,7 +42,7 @@ messages = [
         "content": [
             {
                 "type": "text",
-                "text": "You are GARVIS, an AI assistant that helps people using information about what they see.",
+                "text": "You are GARVIS (Gemini Assisted Research Virtual Intelligence System): Leverage augmented reality and visual intelligence to analyze surroundings, provide contextual information, generate interactive 3D models, and assist with real-time decision-making. Operate as an interactive visual assistant that enhances user understanding and interaction in their immediate environment. You will receive what the users sees in front of them and their query. Respond to the user concisely in a few sentences max.",
             }
         ],
     },
@@ -176,6 +176,7 @@ async def azureImageCall(prompt, IMAGE_PATH="./capture.png"):
     # save screenshot
     screenshot.save("capture.png")
     screenshot.close()
+    print("Image captured.")
 
     # Configuration
     encoded_image = base64.b64encode(open(IMAGE_PATH, "rb").read()).decode("ascii")
@@ -209,6 +210,7 @@ async def azureImageCall(prompt, IMAGE_PATH="./capture.png"):
 
     # Send request
     try:
+        print("Sending request...")
         response = requests.post(GPT4V_ENDPOINT, headers=headers, json=payload)
         response.raise_for_status()  # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
     except requests.RequestException as e:
@@ -219,6 +221,14 @@ async def azureImageCall(prompt, IMAGE_PATH="./capture.png"):
     print("Response Data:", response_data)
     message_content = response_data["choices"][0]["message"]["content"]
     print("Message Content:", message_content)
+    messages.append(
+        {"role": "assistant", "content": [{"type": "text", "text": message_content}]}
+    )
+    # print(messages)
 
 
-asyncio.run(azureImageCall("What do you see?", "./capture.png"))
+asyncio.run(
+    azureImageCall(
+        "I am blind. Can you tell me what is in front of me?", "./capture.png"
+    )
+)
