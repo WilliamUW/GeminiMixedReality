@@ -215,7 +215,10 @@ async def azureImageCall(prompt, IMAGE_PATH="./capture.png"):
         raise SystemExit(f"Failed to make the request. Error: {e}")
 
     # Handle the response as needed (e.g., print or process)
-    print(response.json())
+    response_data = response.json()
+    print("Response Data:", response_data)
+    message_content = response_data["choices"][0]["message"]["content"]
+    print("Message Content:", message_content)
 
 
 asyncio.run(azureImageCall("What do you see?", "./capture.png"))
