@@ -17,8 +17,10 @@ import os
 import requests
 import base64
 import asyncio
+
 # Load environment variables from .env file
 load_dotenv()
+
 
 def to_markdown(text):
     text = text.replace("•", "  *")
@@ -32,9 +34,19 @@ def get_tutorial():
     print("Getting tutorial")
 
 
-
 GPT4V_KEY = os.getenv("OPENAI_API_KEY")
 
+messages = [
+    {
+        "role": "system",
+        "content": [
+            {
+                "type": "text",
+                "text": "You are GARVIS, an AI assistant that helps people using information about what they see.",
+            }
+        ],
+    },
+]
 
 
 async def capture_screen(filename="capture.png"):
@@ -91,7 +103,6 @@ async def receive_data():
     screenshot.close()
 
     image_path = Path("capture.png")
-    imageString = image_to_base64(image_path)
 
     image_description = "No image description."  # visionResponse.text
 
@@ -148,59 +159,50 @@ async def receive_data():
     #     )
 
 
-
-
-
-
 async def start():
     await azureImageCall("What do you see?", "./test.png")
 
 
-#if __name__ == "__main__":
-    
-    #print("starting server")
-    # app.run(host="127.0.0.1", port=5000, debug=True)
+# if __name__ == "__main__":
+
+# print("starting server")
+# app.run(host="127.0.0.1", port=5000, debug=True)
 
 
-async def azureImageCall(prompt, IMAGE_PATH="./test.png"):
+async def azureImageCall(prompt, IMAGE_PATH="./capture.png"):
+    # get screenshot
+    screenshot = ImageGrab.grab()
+
+    # save screenshot
+    screenshot.save("capture.png")
+    screenshot.close()
+
     # Configuration
-    encoded_image = base64.b64encode(open(IMAGE_PATH, 'rb').read()).decode('ascii')
+    encoded_image = base64.b64encode(open(IMAGE_PATH, "rb").read()).decode("ascii")
     headers = {
         "Content-Type": "application/json",
         "api-key": GPT4V_KEY,
     }
 
+    messages.append(
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/jpeg;base64,{encoded_image}"},
+                },
+                {"type": "text", "text": prompt},
+            ],
+        },
+    )
+
     # Payload for the request
     payload = {
-    "messages": [
-        {
-        "role": "system",
-        "content": [
-            {
-            "type": "text",
-            "text": "You are an AI assistant that helps people find information."
-            }
-        ]
-        },
-        {
-        "role": "user",
-        "content": [
-            {
-            "type": "image_url",
-            "image_url": {
-                "url": f"data:image/jpeg;base64,{encoded_image}"
-            }
-            },
-            {
-            "type": "text",
-            "text": "what do you see?"
-            }
-        ]
-        },
-    ],
-    "temperature": 0.7,
-    "top_p": 0.95,
-    "max_tokens": 800
+        "messages": messages,
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "max_tokens": 100,
     }
 
     GPT4V_ENDPOINT = "https://test833138126439.openai.azure.com/openai/deployments/gpt-4v/chat/completions?api-version=2024-02-15-preview"
@@ -214,5 +216,6 @@ async def azureImageCall(prompt, IMAGE_PATH="./test.png"):
 
     # Handle the response as needed (e.g., print or process)
     print(response.json())
+
 
 asyncio.run(azureImageCall("What do you see?", "./capture.png"))
