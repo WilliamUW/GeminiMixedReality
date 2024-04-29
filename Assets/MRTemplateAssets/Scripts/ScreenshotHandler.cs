@@ -56,11 +56,11 @@ public class ScreenshotHandler : MonoBehaviour
         yield return www;
         if (www.error != null)
         {
-            updateCaptureButtonText("false");
+            updateCaptureButtonText("Status of your endpoint: " + url + " - Not Working. Please check your internet connection, local python backend, ngrok deployment, and url endpoint.");
         }
         else
         {
-            updateCaptureButtonText("true");
+            updateCaptureButtonText("Status of your endpoint: " + url + " - Working!");
         }
     }
     void Start()
@@ -73,6 +73,8 @@ public class ScreenshotHandler : MonoBehaviour
             // handle connection status here
         }));
         StartCoroutine(PostData("Introduce yourself as GARVIS to a new user.", true, false));
+        // StartCoroutine(PostData("What do you see?", true, false));
+
         // GeminiImage(base64String);
         // Register the OnButtonPressed function to the button's onClick event
         if (captureButton != null)
@@ -266,7 +268,8 @@ public class ScreenshotHandler : MonoBehaviour
             string function_name = N["function_name"];
             if (!string.IsNullOrEmpty(function_name))
             {
-                switch (function_name) {
+                switch (function_name)
+                {
                     case "check_calendar":
                         spawnObject(3);
                         break;
