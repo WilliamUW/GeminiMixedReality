@@ -194,19 +194,15 @@ async def receive_data():
 
     prompt = user_input
 
-    if "help" in user_input:
-        prompt = user_input + ". user is looking at a Cooler Master 212 EVO CPU Cooler."
-
-    elif ("this" in user_input) or ("that" in user_input):
-        # make gemini call
-        visionResponse = await geminiImageCall("Describe in detail what you see.")
-        image_description = visionResponse.text
-        prompt = (
-            "User reply: "
-            + user_input
-            + ". Only if relevant to their reply, use this description of what the user is seeing: "
-            + image_description
-        )
+    # make gemini call
+    visionResponse = await geminiImageCall("Describe in detail what you see.")
+    image_description = visionResponse.text
+    prompt = (
+        "User reply: "
+        + user_input
+        + ". Only if relevant to their reply, use this description of what the user is seeing: "
+        + image_description
+    )
 
     response = chat.send_message(prompt)
 
