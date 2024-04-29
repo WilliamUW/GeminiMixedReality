@@ -247,7 +247,7 @@ public class ScreenshotHandler : MonoBehaviour
         {
             Debug.LogError("Error: " + request.error);
             updateCaptureButtonText("Gemini rate limit, please try again.");
-            speak("Gemini rate limit, please try again.");
+            speak("Rate limit error, please try again.");
         }
         else
         {
