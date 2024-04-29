@@ -13,8 +13,10 @@ from PIL import Image, ImageGrab
 import requests
 from dotenv import load_dotenv
 import os
+
 # Load environment variables from .env file
 load_dotenv()
+
 
 def to_markdown(text):
     text = text.replace("•", "  *")
@@ -28,12 +30,13 @@ def get_tutorial():
     print("Getting tutorial")
 
 
-
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel("gemini-pro")
 
 tool_config = {"function_calling_config": {"mode": "auto"}}
+gemini_pro_model = genai.GenerativeModel("gemini-pro")
+
 model = genai.GenerativeModel(
     "gemini-pro",
     tools=[
@@ -194,16 +197,27 @@ async def receive_data():
 
     prompt = user_input
 
-    # make gemini call
-    visionResponse = await geminiImageCall("Describe in detail what you see.")
-    image_description = visionResponse.text
-    prompt = (
-        "User reply: "
-        + user_input
-        + ". Only if relevant to their reply, use this description of what the user is seeing: "
-        + image_description
+    needVisualContextResponse = gemini_pro_model.generate_content(
+        "User Query: "
+        + prompt
+        + ". Analyze the user's query and decide whether it requires visual context from the user's environment. Respond with 'Yes' if the query pertains to what the user is currently seeing, or 'No' if it does not. Examples of 'No' responses include queries that ask about general knowledge, calendar events, or abstract information. Examples of 'Yes' responses include queries about the user's immediate surroundings, such as 'What am I looking at?' or 'What's in front of me?'."
     )
+    needVisualContextResponse.resolve()
+    print(needVisualContextResponse)
 
+    if needVisualContextResponse and "Yes" in needVisualContextResponse.text:
+        # make gemini vision call
+        print("Need visual context!")
+        visionResponse = await geminiImageCall("Describe in detail what you see.")
+        image_description = visionResponse.text
+        prompt = (
+            "User reply: "
+            + user_input
+            + ". Only if relevant to their reply, use this description of what the user is seeing: "
+            + image_description
+        )
+    else:
+        print("No visual context needed!")
     response = chat.send_message(prompt)
 
     print(chat.history)
