@@ -3,7 +3,7 @@
 ## Important Note: This application is not standalone.
 
 - It requires Oculus Casting and a local backend to process video feed from the deployed Meta Mixed Reality app.
-- You need a PC running the local backend with ngrok, with the
+- You need a PC running the local backend with ngrok, with the main display showing the Oculus Casting tab in full screen.
 
 ## Step by step setup
 
@@ -11,7 +11,7 @@
 
 - Unity
 - Meta Quest 3
-- Gemini API Key or Azure AI API Key
+- Gemini API Key
 - ngrok
 - Python
 
@@ -35,11 +35,6 @@ If you have Gemini API Key:
 GOOGLE_API_KEY=AIz...PA8
 ```
 
-If you have Microsoft Azure Key:
-
-```
-OPENAI_API_KEY=d22...564
-```
 
 2. Start local python web server
 
@@ -47,12 +42,6 @@ Google Gemini Backend (Gemini Vision + Gemini Pro with Function Calling)
 
 ```
 cd server && python gemini.py
-```
-
-Microsoft Azure Backend (OpenAI GPT-4 Turbo Vision with Function Calling)
-
-```
-cd server && python azure.py
 ```
 
 3. Make public with ngrok
