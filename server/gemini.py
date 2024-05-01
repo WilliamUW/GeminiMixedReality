@@ -44,7 +44,7 @@ model = genai.GenerativeModel(
             "function_declarations": [
                 {
                     "name": "user_needs_help",
-                    "description": "if the user says I need help, or needs help with anything, help them by finding relevant tutorials for them",
+                    "description": "If the user says I need help, help them by finding relevant tutorials for them. Do not call this function if they are asking for information about what they are seeing.",
                     "parameters": {
                         "type": "object",
                         "properties": {
