@@ -44,7 +44,7 @@ model = genai.GenerativeModel(
             "function_declarations": [
                 {
                     "name": "user_needs_help",
-                    "description": "If the user says I need help, help them by finding relevant tutorials for them. Do not call this function if they are asking for information about what they are seeing.",
+                    "description": "Only call this if the user explicitly says 'I need help'. Do not call this function if they are ask for what do you see / what is front of me / what am I holding.",
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -205,6 +205,8 @@ async def receive_data():
     needVisualContextResponse.resolve()
     print(needVisualContextResponse)
 
+    image_description = ""
+
     if needVisualContextResponse and "Yes" in needVisualContextResponse.text:
         # make gemini vision call
         print("Need visual context!")
@@ -237,6 +239,8 @@ async def receive_data():
                 additional_information = (
                     "I have rendered a 3d model of the eclipse for you to visualize."
                 )
+
+        additional_information = additional_information + " " + image_description
         # afterFunctionResponse = chat.send_message(
         #     "Respond to the user that the action has been performed. Additional information: "
         #     + additional_information,
