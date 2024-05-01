@@ -67,6 +67,10 @@ https://github.com/WilliamUW/GARVIS/blob/135ddc978230c9b48d1adf15321834e65ca7365
 
 Build "mainScene" to Quest 3.
 
-6. Start Oculus Casting to computer.
+6. Start Oculus Casting to computer, enter full screen.
+
+![casting](https://media.discordapp.net/attachments/1234940320408539178/1235329798377705602/oculuscasting.PNG?ex=6633fa07&is=6632a887&hm=a1f7fd844884e225a31e6b5f707521b1959e09afe8c8fc8f16fe6e8b0bf69fc5&=&format=webp&quality=lossless&width=1742&height=896)
+
+![fullscreen](https://cdn.discordapp.com/attachments/1234940320408539178/1235329173619478668/fullscreencasting.png?ex=6633f972&is=6632a7f2&hm=26c6a470b007dc9a37f9d4c55f651ce8532f48ee764cc929449994d126a7ff2b&)
 
 7. Talk to GARVIS by facing your palm up, stop recording your speech by facing your palm down.
