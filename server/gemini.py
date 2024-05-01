@@ -225,24 +225,24 @@ async def receive_data():
     if response.parts[0].function_call:
         function_call = response.parts[0].function_call
         function_name = function_call.name
-        additional_information = ""
+        additional_information = "I have performed the function call: " + function_name
         match (function_name):
             case "user_needs_help":
                 additional_information = "I have rendered a 3d model of the object you need help with, as well as tutorial video."
 
             case "check_calendar":
-                additional_information = "The user has a flight to New York's LaGuardia Airport tomorrow at 8am. I have rendered a 3d map of NYC to better assist your travels including the location of your hotel in Soho, your upcoming meetings at the World Trade Center, and your upcoming dinner in Brooklyn."
+                additional_information = "You have a flight to New York's LaGuardia Airport tomorrow at 8am. I have rendered a 3d map of NYC to better assist your travels including the location of your hotel in Soho, your upcoming meetings at the World Trade Center, and your upcoming dinner in Brooklyn."
 
             case "render_eclipse":
                 additional_information = (
                     "I have rendered a 3d model of the eclipse for you to visualize."
                 )
-        afterFunctionResponse = chat.send_message(
-            "Respond to the user that the action has been performed. Additional information: "
-            + additional_information,
-            tools=[],
-        )
-        print(afterFunctionResponse)
+        # afterFunctionResponse = chat.send_message(
+        #     "Respond to the user that the action has been performed. Additional information: "
+        #     + additional_information,
+        #     tools=[],
+        # )
+        # print(afterFunctionResponse)
 
         return (
             jsonify(
@@ -250,7 +250,7 @@ async def receive_data():
                     "status": "success",
                     "type": "function",
                     "function_name": function_name,
-                    "text": afterFunctionResponse.text,
+                    "text": additional_information,
                     "image": imageString,
                 }
             ),
