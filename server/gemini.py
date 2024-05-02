@@ -57,20 +57,6 @@ model = genai.GenerativeModel(
                     },
                 },
                 {
-                    "name": "render_flight_path",
-                    "description": "render flight path if the user has an upcoming flight",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "location": {
-                                "type": "string",
-                                "description": "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616",
-                            },
-                        },
-                        "required": ["location"],
-                    },
-                },
-                {
                     "name": "check_calendar",
                     "description": "check the user's calendar for upcoming events and provide a summary",
                 },
@@ -230,7 +216,7 @@ async def receive_data():
         additional_information = "I have performed the function call: " + function_name
         match (function_name):
             case "user_needs_help":
-                additional_information = "I have rendered a 3d model of the object you need help with, as well as tutorial video."
+                additional_information = "I have rendered a 3d model of the object you need help with, as well as a tutorial video."
 
             case "check_calendar":
                 additional_information = "You have a flight to New York's LaGuardia Airport tomorrow at 8am. I have rendered a 3d map of NYC to better assist your travels including the location of your hotel in Soho, your upcoming meetings at the World Trade Center, and your upcoming dinner in Brooklyn."
