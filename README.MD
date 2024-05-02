@@ -27,7 +27,7 @@ ngrok config add-authtoken <token>
 pip install -r requirements.txt
 ```
 
-1. Create .env file.
+1. Create server/.env file.
 
 If you have Gemini API Key:
 
