@@ -200,7 +200,7 @@ async def receive_data():
     needVisualContextResponse = gemini_pro_model.generate_content(
         "User Query: "
         + prompt
-        + ". Analyze the user's query and decide whether it requires visual context from the user's environment. Respond with 'Yes' if the query pertains to what the user is currently seeing, or 'No' if it does not. Examples of 'No' responses include queries that ask about general knowledge, calendar events, or abstract information. Examples of 'Yes' responses include queries about the user's immediate surroundings, such as 'What am I looking at?' or 'What's in front of me?'."
+        + ". Analyze the user's query and decide whether it requires visual context from the user's environment. Respond with 'Yes' if the query pertains to what the user is currently seeing, or 'No' if it does not. Examples of 'No' responses include queries that ask about general knowledge, calendar events, or abstract information. Examples of 'Yes' responses include queries about the user's immediate surroundings, such as 'What am I looking at?' or 'What's in front of me?' or 'can you help me with this', 'what is this', 'i need help'."
     )
     needVisualContextResponse.resolve()
     print(needVisualContextResponse)
