@@ -67,7 +67,6 @@ public class ScreenshotHandler : MonoBehaviour
     {
         tutorialPanel.SetActive(true);
 
-        // speak("hi there");
         StartCoroutine(checkInternetConnection((isConnected) =>
         {
             // handle connection status here
