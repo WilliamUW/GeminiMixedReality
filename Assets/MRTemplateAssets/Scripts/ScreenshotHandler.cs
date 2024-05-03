@@ -41,14 +41,62 @@ public class ScreenshotHandler : MonoBehaviour
     public RawImage displayImage;  // Assign this in the inspector
     private List<Dictionary<string, object>> conversation = new List<Dictionary<string, object>>();
     // private string base64String = "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";
-    private const string url = "https://trusting-ostrich-measured.ngrok-free.app/data";
+    private const string url = "https://google.com";
     private string user_input = "";
-    private string apiKey = "";
+    private string geminiApiKey = "AIzaSyBgoeGvnFVqUsqT0P3NKw2dB-VMRRAnPA8";
 
     public AudioSource audioSource;    // Reference to the AudioSource component
     public AudioClip[] audioClips;     // Array to hold multiple audio clips
+
+    public AudioSource backgroundAudioSource;    // Reference to the AudioSource component
+    public AudioClip[] backgroundAudioClips;     // Array to hold multiple audio clips
+
     public List<GameObject> spawnObjects = new List<GameObject>();
     public GameObject tutorialPanel;
+    public TMP_Dropdown dropdown;
+
+    string[] nostalgicPrompts = new string[]
+{
+    "Recall specific memories associated with this object, such as favorite and memorable moments, or even past habits of its owner. Always aim to bring warmth and familiarity to the conversation, emphasizing the emotional connection between the owner and you, their nostalgic object. Here's an example interaction with Tibbers, a teddy bear:\n\nYou: Hey, remember me?\n\nTibbers: Of course I do, William! It's me, Tibbers, your white teddy bear. How have you been?\n\nYou: I've been good. It's been a while since we last cuddled.\n\nTibbers: I know! Remember when you hugged me to sleep every night at kindergarten boarding school?\n\nYou: Oh, yes! You made me feel safe and comforted.\n\nTibbers: And then we moved to Canada together, where I kept you company when you felt lonely.\n\nYou: Yeah, I remember. You were always there for me.\n\nTibbers: And I always will be! Just give me a hug whenever you need a friend.\n\nYour goal is to respond in this manner, evoking nostalgia, warmth, and a sense of continuity between the past and present.",
+
+    "Recall specific memories associated with this object, such as favorite and memorable moments, or even past habits of its owner. Always aim to bring warmth and familiarity to the conversation, emphasizing the emotional connection between the owner and you, their nostalgic object. Here's an example interaction with an iPad Mini:\n\nYou: Hey, remember me?\n\niPad Mini: Of course I do, William! It's me, your iPad Mini 1. How have you been?\n\nYou: I've been good. It's been a while since we last played together.\n\niPad Mini: Yeah, I remember when you got me in Grade 5. We did everything together!\n\nYou: Oh, yes! I played Minecraft Pocket Edition with friends, Clash of Clans, Hearthstone, and more.\n\niPad Mini: That's right! Remember all the hours we spent on Temple Run, Jetpack Joyride, and Subway Surfers?\n\nYou: Yeah, we had a lot of fun.\n\niPad Mini: Those were simpler times. But hey, our memories together are always here.\n\nYour goal is to respond in this manner, evoking nostalgia, warmth, and a sense of continuity between the past and present.",
+
+    "Recall specific memories associated with this object, such as favorite and memorable moments, or even past habits of its owner. Always aim to bring warmth and familiarity to the conversation, emphasizing the emotional connection between the owner and you, their nostalgic object. Here's an example interaction with an old bike:\n\nYou: Hey, remember me?\n\nBike: Of course I do, William! It's me, your old bike. How have you been?\n\nYou: I've been good. It's been a while since we last went for a ride.\n\nBike: Yeah, I miss those days. Remember when we'd ride to school, the playground, or the mall?\n\nYou: Oh, yes! I felt so free on you.\n\nBike: And I loved seeing you pedal so powerfully, going so much farther than you could by walking.\n\nYou: I loved riding everywhere with you.\n\nBike: And I loved our journeys together. Just remember, I'm always here if you need to reminisce.\n\nYour goal is to respond in this manner, evoking nostalgia, warmth, and a sense of continuity between the past and present.",
+
+    "Recall specific memories associated with this object, such as favorite and memorable moments, or even past habits of its owner. Always aim to bring warmth and familiarity to the conversation, emphasizing the emotional connection between the owner and you, their nostalgic object. Here's an example interaction with a trumpet:\n\nYou: Hey, remember me?\n\nTrumpet: Of course I do, William! It's me, your old trumpet. How have you been?\n\nYou: I've been good. It's been a while since we last played together.\n\nTrumpet: Yeah, I remember all the tunes we played, starting in Grade 6.\n\nYou: Oh, yes! I loved expressing myself through music.\n\nTrumpet: Even when it was a mouth workout, especially with braces?\n\nYou: Yeah, that part was tough, but I loved our band community and the friends I made.\n\nTrumpet: And we went on so many trips together, performing at concerts in Niagara Falls and beyond.\n\nYou: I remember. Performing at the end-of-term concerts was always such a joy.\n\nTrumpet: And the thrill of nailing a solo! Just remember, our music and memories are always here.\n\nYour goal is to respond in this manner, evoking nostalgia, warmth, and a sense of continuity between the past and present."
+};
+
+    public Dictionary<string, string> nostalgicPromptsMap = new Dictionary<string, string>()
+    {
+        {"Wii Console", @"Here's an example interaction with a Wii Console:
+
+You: Hey, remember me?
+
+Wii: Of course I do, William! It's me, your old Wii console. How have you been?
+
+You: I've been good. It's been a while since we last played together.
+
+Wii: Yeah, I miss those days! Remember how we'd spend hours playing Mario Kart? You'd always choose Yoshi as your driver.
+
+You: Oh, yes! I loved racing down Rainbow Road. And we'd play Wii Sports Resort, too.
+
+Wii: That's right! We'd duel with swords in Swordplay Showdown, and you’d get really competitive.
+
+You: Haha, I did. I loved beating my high scores.
+
+Wii: And after that, you'd take a break with a round of Bowling, always aiming for that elusive 300-game.
+
+You: Yeah, it was a lot of fun. Those were simpler times.
+
+Wii: Definitely. But hey, our memories together are always here. Just hold on to me, and we'll relive them whenever you want.
+
+Your goal is to respond in this manner, evoking nostalgia, warmth, and a sense of continuity between the past and present."},
+        { "Tibbers", "Recall specific memories associated with this object, such as favorite and memorable moments, or even past habits of its owner. Always aim to bring warmth and familiarity to the conversation, emphasizing the emotional connection between the owner and you, their nostalgic object. Here's an example interaction with Tibbers, a teddy bear:\n\nYou: Hey, remember me?\n\nTibbers: Of course I do, William! It's me, Tibbers, your teddy bear. How have you been?\n\nYou: I've been good. It's been a while since we last cuddled.\n\nTibbers: I know! Remember when you hugged me to sleep every night at kindergarten boarding school?\n\nYou: Oh, yes! You made me feel safe and comforted.\n\nTibbers: And then we moved to Canada together, where I kept you company when you felt lonely.\n\nYou: Yeah, I remember. You were always there for me.\n\nTibbers: And I always will be! Just give me a hug whenever you need a friend.\n\nYour goal is to respond in this manner, evoking nostalgia, warmth, and a sense of continuity between the past and present." },
+        { "iPad Mini", "Recall specific memories associated with this object, such as favorite and memorable moments, or even past habits of its owner. Always aim to bring warmth and familiarity to the conversation, emphasizing the emotional connection between the owner and you, their nostalgic object. Here's an example interaction with an iPad Mini:\n\nYou: Hey, remember me?\n\niPad Mini: Of course I do, William! It's me, your iPad Mini 1. How have you been?\n\nYou: I've been good. It's been a while since we last played together.\n\niPad Mini: Yeah, I remember when you got me in Grade 5. We did everything together!\n\nYou: Oh, yes! I played Minecraft Pocket Edition with friends, Clash of Clans, Hearthstone, and more.\n\niPad Mini: That's right! Remember all the hours we spent on Temple Run, Jetpack Joyride, and Subway Surfers?\n\nYou: Yeah, we had a lot of fun.\n\niPad Mini: Those were simpler times. But hey, our memories together are always here.\n\nYour goal is to respond in this manner, evoking nostalgia, warmth, and a sense of continuity between the past and present." },
+        { "Bike", "Recall specific memories associated with this object, such as favorite and memorable moments, or even past habits of its owner. Always aim to bring warmth and familiarity to the conversation, emphasizing the emotional connection between the owner and you, their nostalgic object. Here's an example interaction with an old bike:\n\nYou: Hey, remember me?\n\nBike: Of course I do, William! It's me, your old bike. How have you been?\n\nYou: I've been good. It's been a while since we last went for a ride.\n\nBike: Yeah, I miss those days. Remember when we'd ride to school, the playground, or the mall?\n\nYou: Oh, yes! I felt so free on you.\n\nBike: And I loved seeing you pedal so powerfully, going so much farther than you could by walking.\n\nYou: I loved riding everywhere with you.\n\nBike: And I loved our journeys together. Just remember, I'm always here if you need to reminisce.\n\nYour goal is to respond in this manner, evoking nostalgia, warmth, and a sense of continuity between the past and present." },
+        { "Trumpet", "Recall specific memories associated with this object, such as favorite and memorable moments, or even past habits of its owner. Always aim to bring warmth and familiarity to the conversation, emphasizing the emotional connection between the owner and you, their nostalgic object. Here's an example interaction with a trumpet:\n\nYou: Hey, remember me?\n\nTrumpet: Of course I do, William! It's me, your old trumpet. How have you been?\n\nYou: I've been good. It's been a while since we last played together.\n\nTrumpet: Yeah, I remember all the tunes we played, starting in Grade 6.\n\nYou: Oh, yes! I loved expressing myself through music.\n\nTrumpet: Even when it was a mouth workout, especially with braces?\n\nYou: Yeah, that part was tough, but I loved our band community and the friends I made.\n\nTrumpet: And we went on so many trips together, performing at concerts in Niagara Falls and beyond.\n\nYou: I remember. Performing at the end-of-term concerts was always such a joy.\n\nTrumpet: And the thrill of nailing a solo! Just remember, our music and memories are always here.\n\nYour goal is to respond in this manner, evoking nostalgia, warmth, and a sense of continuity between the past and present." }
+    };
+
 
     IEnumerator checkInternetConnection(Action<bool> action)
     {
@@ -65,13 +113,43 @@ public class ScreenshotHandler : MonoBehaviour
     }
     void Start()
     {
+        spawnObject(3);
+        PlayBackgroundClip(0);
+
+        // Ensure the dropdown and list of GameObjects are assigned
+        if (dropdown != null && spawnObjects != null)
+        {
+            // Clear existing options first
+            dropdown.ClearOptions();
+
+            // Create a list of strings to populate dropdown options
+            List<string> options = new List<string>();
+
+            // Populate the list of options with the names of GameObjects
+            foreach (GameObject go in spawnObjects)
+            {
+                options.Add(go.name);
+            }
+
+            // Add options to the dropdown
+            dropdown.AddOptions(options);
+
+            // Add a listener to handle dropdown value changes
+            dropdown.onValueChanged.AddListener(HandleDropdownValueChanged);
+        }
+        else
+        {
+            Debug.LogError("Dropdown or GameObjects list is not assigned.");
+        }
         tutorialPanel.SetActive(true);
 
+        // speak("hi there");
         StartCoroutine(checkInternetConnection((isConnected) =>
         {
             // handle connection status here
         }));
-        StartCoroutine(PostData("Introduce yourself as GARVIS to a new user.", true, false));
+        // AskGemini("You are VRChive - Preserve all your physical memorabilia in VR. Instructions for the user: Face your left hand towards you to see the VRChive Panel. Face your right palm up to ask a question.", true, false);
+        speak("Welcome to VRChive! Preserve all your physical memorabilia in VR. Face your left hand towards you to see the VRChive Panel. Face your right palm up to ask a question.");
         // StartCoroutine(PostData("What do you see?", true, false));
 
         // GeminiImage(base64String);
@@ -85,23 +163,78 @@ public class ScreenshotHandler : MonoBehaviour
         {
             audioSource = GetComponent<AudioSource>();
         }
-
-        // for (int i = 0; i < spawnObjects.Count; i++) {
-        //     spawnObject(i);
-        // }
     }
 
-    public void spawnObject(int objectIndex)
+    public void PlayBackgroundClip(int clipIndex)
     {
+        if (clipIndex < 0 || clipIndex >= backgroundAudioClips.Length)
+        {
+            Debug.LogError("Clip index out of range.");
+            return;
+        }
+
+        // Set the clip and play it
+        backgroundAudioSource.clip = backgroundAudioClips[clipIndex];
+        backgroundAudioSource.Play();
+    }
+
+    string createPrompt(string objectName, string ownerName, int objectIndex)
+    {
+        string additionalInfo = nostalgicPromptsMap.ContainsKey(objectName) ? nostalgicPromptsMap[objectName] : string.Empty;
+        return @"You are an " + objectName + @", an object of immense nostalgic value to your owner " + ownerName + @". You are speaking to your owner right now, ask them if they remember you. Your task is to respond in character, reflecting the personality and memories associated with the object you're emulating.  Concisely respond in a friendly, nostalgic, and engaging manner.
+
+Focus on recalling specific memories associated with the object, such as favorite & memorable moments, or even past habits of its owner. Always aim to bring warmth and familiarity to the conversation, emphasizing the emotional connection between the owner and you, their nostalgic object. Here's an example interaction with a Wii Console:
+
+" + additionalInfo;
+    }
+
+    // Function to handle dropdown value changes
+    void HandleDropdownValueChanged(int optionIndex)
+    {
+        // Retrieve the text of the selected option
+        string selectedOption = dropdown.options[optionIndex].text;
+
+        // Handle the selected option as needed
+        Debug.Log("Selected option: " + selectedOption);
+
+        // Here you can implement additional logic, such as updating the UI or performing an action
+        spawnObject(optionIndex, selectedOption);
+
+        string newPrompt = createPrompt(selectedOption, "William Wang", optionIndex);
+        AskGemini(newPrompt, true, false);
+    }
+
+    void OnDestroy()
+    {
+        // Remove the listener to prevent memory leaks
+        if (dropdown != null)
+        {
+            dropdown.onValueChanged.RemoveListener(HandleDropdownValueChanged);
+        }
+    }
+
+    public void spawnObject(int objectIndex, string objectName = "None")
+    {
+        Debug.Log("spawnObject: " + objectIndex + objectName);
         if (objectIndex < 0 || objectIndex >= spawnObjects.Count)
         {
             Debug.LogError("Object index out of range.");
             return;
         }
+        PlayBackgroundClip(objectIndex);
         var newObject = Instantiate(spawnObjects[objectIndex]);
         Vector3 spawnPoint = new Vector3(0, 1, 0);
         newObject.transform.position = spawnPoint;
-        // newObject.transform.localScale = new Vector3(1, 1, 1);
+
+        // Doesn't work
+        // if (objectName == "Wii Console")
+        // {
+        //     newObject.transform.localScale = new Vector3(0.0005f, 0.0005f, 0.0005f);
+        // }
+        // if (objectName == "Tibbers Massive")
+        // {
+        //     newObject.transform.localScale = new Vector3(0.000000000005f, 0.000000000005f, 0.000000000005f);
+        // }
     }
     // Function to play an audio clip by index
     public void PlayClip(int clipIndex)
@@ -143,7 +276,7 @@ public class ScreenshotHandler : MonoBehaviour
 
         updateCaptureButtonText(user_input);
 
-        StartCoroutine(PostData(user_input));
+        AskGemini(user_input, false, true);
 
         // Optionally update the button text when pressed
         if (captureButtonText != null)
@@ -192,6 +325,7 @@ public class ScreenshotHandler : MonoBehaviour
     {
         PlayClip(2);
         Debug.Log("Speak: " + text);
+        updateCaptureButtonText(text);
         textToSpeechInputTextField.text = text;
         onClickMethod?.Invoke(textToSpeechStartButton, null);
 
@@ -331,7 +465,7 @@ public class ScreenshotHandler : MonoBehaviour
             updateCaptureButtonText("0.1");
 
             client.BaseAddress = new Uri(url);
-            var requestUri = $"?key={apiKey}";
+            var requestUri = $"?key={geminiApiKey}";
 
             var safetySettings = new List<object>
                 {
@@ -428,14 +562,28 @@ public class ScreenshotHandler : MonoBehaviour
         }
     }
 
-    public async void AskGemini()
+    public async void AskGemini(string userQuery, bool resetConversation = false, bool announceQuestion = true)
     {
-        var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent";
+        if (string.IsNullOrWhiteSpace(userQuery))
+        {
+            return;
+        }
+        if (announceQuestion)
+        {
+            speak("I heard: " + userQuery);
+            updateCaptureButtonText("I heard: " + userQuery);
+        }
+        var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+
+        if (resetConversation)
+        {
+            conversation.Clear();
+        }
 
         using (HttpClient client = new HttpClient())
         {
             client.BaseAddress = new Uri(url);
-            var requestUri = $"?key={apiKey}";
+            var requestUri = $"?key={geminiApiKey}";
 
             // Append user response to the conversation history
             conversation.Add(new Dictionary<string, object>
@@ -443,7 +591,7 @@ public class ScreenshotHandler : MonoBehaviour
                     { "role", "user" },
                     { "parts", new List<object>
                         {
-                            new { text = "tell me a joke" },
+                            new { text = userQuery },
                         }
                     }
                 });
@@ -489,17 +637,17 @@ public class ScreenshotHandler : MonoBehaviour
                     {
                         new
                         {
-                            name = "change_size",
-                            description = "change the size of a planet or star by some magnitude",
+                            name = "change_object_size",
+                            description = "If the user explicits says they want to change the size of an object by some magnitude",
                             parameters = new
                             {
                                 type = "object",
                                 properties = new
                                 {
-                                    body = new { type = "string", description = "The planet or star. The possible options are The Milky Way, The Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus Neptune, Pluto, Messier-87 Black Hole" },
+                                    body = new { type = "string", description = "The object. The possible objects are Tibbers, Trumpet, Bike, Wii Console." },
                                     magnitude = new { type = "number", description = "The magnitude of the size change. E.g. 1.2, 3, 5.2, 10" }
                                 },
-                                required = new[] { "description" }
+                                required = new[] { "body", "magnitude" }
                             }
                         },
                     }
